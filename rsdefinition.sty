@@ -199,19 +199,19 @@
   \rs@define{#1}{}{}{#2}{}}
 
 % Lisp definitions.
-\newcommand*\defunname{Function}
-\newcommand*\defmacroname{Macro}
-\newcommand*\defspecname{Special Form}
-\newcommand*\defgenericname{Generic Function}
-\newcommand*\defmethodname{Method}
-\newcommand*\defvarname{Special Variable}
-\newcommand*\defoptname{User Option}
-\newcommand*\defparamname{Parameter}
-\newcommand*\defconstname{Constant}
-\newcommand*\deftypename{Data Type}
-\newcommand*\defstructname{Structure}
-\newcommand*\defclassname{Class}
-\newcommand*\defconditionname{Condition}
+\NewDocumentCommand\defunname{}{Function}
+\NewDocumentCommand\defmacroname{}{Macro}
+\NewDocumentCommand\defspecname{}{Special Form}
+\NewDocumentCommand\defgenericname{}{Generic Function}
+\NewDocumentCommand\defmethodname{}{Method}
+\NewDocumentCommand\defvarname{}{Special Variable}
+\NewDocumentCommand\defoptname{}{User Option}
+\NewDocumentCommand\defparamname{}{Parameter}
+\NewDocumentCommand\defconstname{}{Constant}
+\NewDocumentCommand\deftypename{}{Data Type}
+\NewDocumentCommand\defstructname{}{Structure}
+\NewDocumentCommand\defclassname{}{Class}
+\NewDocumentCommand\defconditionname{}{Condition}
 
 \NewDocumentCommand\defun{s O{} m}{%
   \rs@defun{\defunname}{#1}{#2}{#3}}%
@@ -246,15 +246,15 @@
 \NewCommandCopy\defmac\defmacro
 
 % TeX definitions.
-\newcommand*\deftexname{Control Sequence}
-\newcommand*\defenvname{Environment}
-\newcommand*\defcountname{Counter}
-\newcommand*\defdimenname{Dimension}
-\newcommand*\defskipname{Glue}
-\newcommand*\defmuskipname{Math Glue}
-\newcommand*\defboxname{Box Register}
-\newcommand*\deftoksname{Token Register}
-\newcommand*\defifname{Conditional}
+\NewDocumentCommand\deftexname{}{Control Sequence}
+\NewDocumentCommand\defenvname{}{Environment}
+\NewDocumentCommand\defcountname{}{Counter}
+\NewDocumentCommand\defdimenname{}{Dimension}
+\NewDocumentCommand\defskipname{}{Glue}
+\NewDocumentCommand\defmuskipname{}{Math Glue}
+\NewDocumentCommand\defboxname{}{Box Register}
+\NewDocumentCommand\deftoksname{}{Token Register}
+\NewDocumentCommand\defifname{}{Conditional}
 
 \NewDocumentCommand\deftex{m}{%
   \rs@defun{\deftexname}{}{}{#1}}
@@ -277,7 +277,7 @@
   \rs@define{\defifname}{}{}{#1}{}}
 
 % Other definitions.
-\newcommand*\defcomname{Command}
+\NewDocumentCommand\defcomname{}{Command}
 
 \NewDocumentCommand\defcom{s O{} m}{%
   \rs@defun{\defcomname}{#1}{#2}{#3}}
