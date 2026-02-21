@@ -1,0 +1,4 @@
+* Ralph's TeX and LaTeX Macros
+
+This is =rsmac=, an assorted collection of commands and environments
+for typesetting TeX and LaTeX documents.
