@@ -1,0 +1,36 @@
+\documentclass{article}
+\usepackage{tabularx}
+\usepackage{rsdatetime}
+
+\begin{document}
+\begin{table}[h]
+\begin{tabular}{| l | l | l | l |}
+\hline
+\multicolumn{2}{| c  }{Extended Format} &
+\multicolumn{2}{| c |}{Basic Format} \\
+\hline
+\hfil\LaTeX{} Command  & \hfil Result &
+\hfil\LaTeX{} Command  & \hfil Result \\
+\hline
+\verb|\isodate|          & \isodate          &
+\verb|\isodate*|         & \isodate*         \\
+\verb|\isodate[year]|    & \isodate[year]    &
+\verb|\isodate*[year]|   & \isodate*[year]   \\
+\verb|\isodate[month]|   & \isodate[month]   &
+\verb|\isodate*[month]|  & \isodate*[month]  \\
+\verb|\isodate[day]|     & \isodate[day]     &
+\verb|\isodate*[day]|    & \isodate*[day]    \\
+\verb|\isodate[hour]|    & \isodate[hour]    &
+\verb|\isodate*[hour]|   & \isodate*[hour]   \\
+\verb|\isodate[minute]|  & \isodate[minute]  &
+\verb|\isodate*[minute]| & \isodate*[minute] \\
+\verb|\isotime|          & \isotime          &
+\verb|\isotime*|         & \isotime*         \\
+\verb|\isotime[hour]|    & \isotime[hour]    &
+\verb|\isotime*[hour]|   & \isotime*[hour]   \\
+\verb|\isotime[minute]|  & \isotime[minute]  &
+\verb|\isotime*[minute]| & \isotime*[minute] \\
+\hline
+\end{tabular}
+\end{table}
+\end{document}

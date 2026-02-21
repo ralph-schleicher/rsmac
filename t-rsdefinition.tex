@@ -1,0 +1,153 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{blindtext}
+\usepackage{rsdefinition}
+
+\makeatletter
+\parskip\smallskipamount
+\makeatother
+
+\begin{document}
+\blindtext[1]
+\begin{definition}
+\defun{user-name}
+Function without an argument.
+\end{definition}
+\blindtext[1]
+\begin{definition}
+\defun{forward-line} &optional \var{n}
+Move \var{n} lines forward (backward if \var{n} is negative).
+
+Returns the count of lines left to move.  If moving forward, that is
+\var{n} minus number of lines moved; if backward, \var{n} plus number
+of lines moved.
+\end{definition}
+\blindtext[1]
+\begin{definition}
+\defun{read} \var{stream} &optional (\var{eof-error-p} \symb{t}) \var{eof-value}
+
+An environment for documenting commands and application programming
+interfaces.  Inside a definition environment, use the \code{\\deffn},
+\code{\\defvr}, and \code{\\deftp} commands to describe functions,
+variables, data types, and other such artifacts.  The first line is
+the signature line of the definition.  The actual documentation
+follows in the body of the definition environment.  Here are two
+examples:
+
+\begin{verbatim}
+\begin{definition}
+\defun{forward-line} &optional \var{n}
+Move \var{n} lines forward (backward if \var{n} is negative).
+\end{definition}
+\end{verbatim}
+
+\begin{definition}
+\defun{forward-line} &optional \var{n}
+Move \var{n} lines forward (backward if \var{n} is negative).
+\end{definition}
+
+\begin{verbatim}
+\begin{definition}
+\defun[double]{sin} (double \var{x})
+\defun[double]{cos} (double \var{x})
+Return the sine or cosine of \var{x} respectively.
+\end{definition}
+\end{verbatim}
+
+\begin{definition}
+\defun*[double]{sin} (double \var{x})
+\defun*[double]{cos} (double \var{x})
+Return the sine or cosine of \var{x} respectively.
+\end{definition}
+
+\begin{definition}
+\defun[double]{sin} (double \var{x})
+\defun[double]{cos} (double \var{x}, double \var{x}, double \var{x}, double \var{x}, double \var{x}, double \var{x}, double \var{x}, double \var{x})
+Return the sine or cosine of \var{x} respectively.
+\end{definition}
+\end{definition}
+
+\blindtext[1]
+
+No blank lines around this one.
+\begin{definition}
+\defun*[void *]{fubar}{\var{first-arg}
+  &key
+  \var{second-arg} \var{third-arg}
+  (\var{fourth-arg} \symb{fourth-value})
+  (\var{fifth-arg} \symb{fifth-value})
+  (\var{sixth-arg} \symb{sixth-value})}
+\defun[void *]{fubar}{%
+  \var{foo} \var{bar} \var{baz} \var{hack} \var{tem}
+  \var{foo} \var{bar} \var{baz} \var{hack} \var{tem}
+  \var{foo} \var{bar} \var{baz} \var{hack} \var{tem}
+  \var{foo} \var{bar} \var{baz} \var{hack} \var{tem}
+  \var{foo} \var{bar} \var{baz} \var{hack} \var{tem}
+  \var{foo} \var{bar} \var{baz} \var{hack} \var{tem}
+  \var{foo} \var{bar} \var{baz} \var{hack} \var{tem}
+  \var{foo} \var{bar} \var{baz} \var{hack} \var{tem}
+  \var{foo} \var{bar} \var{baz} \var{hack} \var{tem}
+  \var{foo} \var{bar} \var{baz} \var{hack} \var{tem}}
+Two functions with many arguments.
+\end{definition}
+\blindtext[1]
+
+\begin{definition}
+\defun[double] {round_up} (double \var{number}, double \var{scale})
+\defun[double] {round_down} (double \var{number}, double \var{scale})
+\defun[double] {round_zero} (double \var{number}, double \var{scale})
+\defun[double] {round_inf} (double \var{number}, double \var{scale})
+Round number to a multiple of \var{scale}.
+\begin{itemize}
+\item
+First argument \var{number} is a number.
+\item
+Second argument \var{scale} is the rounding scale factor.
+Value has to be a positive number.
+\end{itemize}
+Return value is the rounded number.
+\begin{description}
+\item[\symb{round_up}]
+%\symbitem{round_up}
+Round towards plus infinity.
+\symbitem{round_down}
+Round towards minus infinity.
+\symbitem{round_zero}
+Round towards zero (away from infinity).
+\symbitem{round_inf}
+Round away from zero (towards infinity).
+\end{description}
+\end{definition}
+
+\begin{definition}
+\deftex{\code}\meta{argument}
+\deftex{\code*}\meta{argument}
+Print \meta{argument} as literal text in a typewriter type font.
+The special characters
+\begin{display}[small]
+\textbackslash\quad\{\quad\}\quad\#\quad\$\quad\%\quad\&\quad\textasciicircum\quad\_\quad\textasciitilde
+\end{display}
+\noindent
+have to be escaped.  Two control sequences have another meaning than
+usual; \code{\\\ } prints a visible space and \code{\\\\} prints a
+backslash character.  The star variant allows line breaks.
+
+As a rule of thumb, single word commands, options, and symbol names
+should be printed without quotes.  Examples on the other hand, should
+be printed with single quotes.
+\end{definition}
+
+\begin{definition}
+\defenv{metasyntax}
+An environment to describe the syntax of a language, for example, a
+computer programming language, an application programming interface, a
+file or document format, or a communication protocol.
+
+Regular text is printed as in the \code{\\code} command and such texts
+denote terminals.  Non-terminals should be formatted with the
+\code{\\meta} command.  A set of meta-symbol commands is available
+inside the body of the \code{metasyntax} environment denoting syntax
+contructs.
+\end{definition}
+\end{document}

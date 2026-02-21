@@ -1,0 +1,146 @@
+%% rsmetasyntax.sty --- symbol names and meta-syntactic variables
+
+% Copyright (C) 2023 Ralph Schleicher
+
+% Redistribution and use in source and binary forms, with or without
+% modification, are permitted provided that the following conditions
+% are met:
+%
+%    * Redistributions of source code must retain the above copyright
+%      notice, this list of conditions and the following disclaimer.
+%
+%    * Redistributions in binary form must reproduce the above copyright
+%      notice, this list of conditions and the following disclaimer in
+%      the documentation and/or other materials provided with the
+%      distribution.
+%
+%    * Neither the name of the copyright holder nor the names of its
+%      contributors may be used to endorse or promote products derived
+%      from this software without specific prior written permission.
+%
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+% "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+% LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+% FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE
+% COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+% INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+% BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+% LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+% CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+% LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+% ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+% POSSIBILITY OF SUCH DAMAGE.
+
+%% Code:
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{rsmetasyntax}[2026/02/20]
+\RequirePackage{alltt}
+
+% \code{...}
+%
+% For printing all kind of literal text.  The special characters ‘\’,
+% ‘{’, ‘}’, ‘#’, ‘$’, ‘%’, ‘&’, ‘^’, ‘_’, and ‘~’, have to be escaped.
+% The star variant allows code breaks.
+%
+% Note: This macro depends on the font encoding; T1 works well.
+\def\rs@tt{%
+  \normalfont\ttfamily
+  \let\ \textvisiblespace
+  \let\\\textbackslash
+  \let\^\textasciicircum
+  \let\~\textasciitilde}
+
+\NewDocumentCommand\code{s m}{%
+  \IfBooleanF{#1}\mbox{\rs@tt\edef\next{#2}\next}}
+
+\NewDocumentCommand\codeitem{m}{%
+  \item[\code{#1}]}
+
+% \symb{...}
+%
+% Symbol names, i.e. programming language identifiers.
+% Intermediate space characters are preserved, e.g.
+% ‘\symb{struct dirent}’ produces ‘struct dirent’.
+\def\rs@meaning#1{%
+  \rs@meaningi#1 \end}
+\def\rs@meaningi#1 #2{%
+  \toks@{#1}\edef\next{\the\toks@}%
+  % ‘\meaning’ may produce extra spaces, for example,
+  % ‘\symb{\code*}’ expands to ‘\code *’.  Ensure that
+  % ‘\zap@space’ is terminated by ‘ \@empty’.
+  \edef\next{\expandafter\strip@prefix\meaning\next\space}%
+  \expandafter\zap@space\next\@empty
+  \ifx#2\end\let\next\relax\else
+    \space\def\next{\rs@meaningi#2}\fi
+  \next}
+
+\NewDocumentCommand\symb{m}{%
+  \mbox{\normalfont\ttfamily\rs@meaning{#1}}}
+
+\NewDocumentCommand\symbitem{m}{%
+  \item[\symb{#1}]}
+
+% \var{...}
+% \meta{...}
+%
+% Two kinds of meta-syntactic variable.
+\NewDocumentCommand\var{m}{%
+  \mbox{\normalfont\itshape#1\/}}
+
+\NewDocumentCommand\meta{m}{%
+  \mbox{$\langle${\normalfont\slshape#1\/}$\rangle$}}
+
+% metasyntax
+%
+% A simple BNF like syntax notation for documenting the syntax of
+% TeX commands.  Everything written in typewriter type is a terminal
+% symbol, ‘\var’ or ‘\meta’ can be used for non-terminal symbols.
+\def\rs@metadef{${}\mathrel\rightarrow{}$}
+\def\rs@metaor{${}\mathbin|{}$}
+\def\rs@metagroupopen{$\left(\right.$}
+\def\rs@metagroupclose{$\left.\right)$}
+\def\rs@metagroup#1{\rs@metagroupopen#1\rs@metagroupclose}
+\def\rs@metakleene#1{${}^{#1}$}
+\def\rs@metakleenestar{\rs@metakleene*}
+\def\rs@metakleeneplus{\rs@metakleene+}
+\def\rs@metaoptional{\rs@metakleene?}
+\def\rs@metadots{${}\ldots{}$}
+% A marker for the start rule.
+\def\rs@metastart{\leavevmode\llap{$\mathord\triangleright\hbox{ }$}}
+\def\rs@metacontinue{\hskip\leftmargini\relax}
+\def\rs@metasyntax{%
+  \let\=\rs@metadef
+  \let\,\thinspace
+  \let\|\rs@metaor
+  \let\(\rs@metagroupopen
+  \let\)\rs@metagroupclose
+  \let\group\rs@metagroup
+  \let\kleene\rs@metakleene
+  \let\*\rs@metakleenestar
+  \let\+\rs@metakleeneplus
+  \let\?\rs@metaoptional
+  \let\dots\rs@metadots
+  \let\start\rs@metastart
+  \let\&\rs@metacontinue
+  \let\default\underline}
+
+\NewDocumentEnvironment{metasyntax}{}{%
+  \alltt
+  % Undo \obeyspaces.
+  \catcode`\ =10
+  \rs@metasyntax
+  \reset@font
+  \rs@tt}{%
+  \endalltt
+  \nobreak}
+
+% local variables:
+% time-stamp-line-limit: 0
+% time-stamp-time-zone: "UTC"
+% time-stamp-format: "%:y/%02m/%02d"
+% time-stamp-start: "^\\\\Provides\\(Class\\|Package\\){[^}]*}\\["
+% time-stamp-end: "\\(\\s-\\|\\]\\)"
+% end:
+
+%% rsmetasyntax.sty ends here

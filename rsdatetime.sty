@@ -1,0 +1,117 @@
+%% rsdatetime.sty --- date and time
+
+% Copyright (C) 2023 Ralph Schleicher
+
+% Redistribution and use in source and binary forms, with or without
+% modification, are permitted provided that the following conditions
+% are met:
+%
+%    * Redistributions of source code must retain the above copyright
+%      notice, this list of conditions and the following disclaimer.
+%
+%    * Redistributions in binary form must reproduce the above copyright
+%      notice, this list of conditions and the following disclaimer in
+%      the documentation and/or other materials provided with the
+%      distribution.
+%
+%    * Neither the name of the copyright holder nor the names of its
+%      contributors may be used to endorse or promote products derived
+%      from this software without specific prior written permission.
+%
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+% "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+% LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+% FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE
+% COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+% INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+% BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+% LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+% CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+% LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+% ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+% POSSIBILITY OF SUCH DAMAGE.
+
+%% Code:
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{rsdatetime}[2026/02/20]
+
+% \isodate*[PRECISION]
+%
+% Print the current date in extended ISO 8601 format.
+%
+% Optional star means to utilize the basic format.
+% Optional argument specifies the precision.  Value is either ‘year’,
+%  ‘month’, ‘day’, ‘hour’, ‘minute’, or ‘second’.  Default is ‘day’.
+%  If the precision is a time of day unit, the time is separated from
+%  the date by a ‘T’ character.
+\DeclareDocumentCommand\isodate{s O{day}}{%
+  \rs@isodatetime{#2}{#1}{\BooleanTrue}}
+
+% \isotime*[PRECISION]
+%
+% Print the current time in extended ISO 8601 format.
+%
+% Optional star means to utilize the basic format.
+% Optional argument specifies the precision.  Value is either ‘hour’,
+% ‘minute’, or ‘second’.  Default is ‘minute’.
+\DeclareDocumentCommand\isotime{s O{minute}}{%
+  \rs@isodatetime{#2}{#1}{\BooleanFalse}}
+
+\def\rs@isodatetime#1#2#3{%
+  \leavevmode\hbox{%
+    % The requested precision.
+    \def\@tempa{#1}%
+    % ‘\@tempswatrue’ means to print the date and time
+    % in extended format.
+    \IfBooleanTF{#2}\@tempswafalse\@tempswatrue
+    % Whether or not to print the time.
+    \let\@tempc\BooleanFalse
+    % Whether or not to print the date.
+    \IfBooleanTF{#3}{%
+      \the\year
+      \def\@tempb{year}%
+      \ifx\@tempa\@tempb\else
+      \if@tempswa-\fi
+      \ifnum\month<10 0\fi\the\month
+      \def\@tempb{month}%
+        \ifx\@tempa\@tempb\else
+          \if@tempswa-\fi
+          \ifnum\day<10 0\fi\the\day
+          \def\@tempb{day}%
+          \ifx\@tempa\@tempb\else
+            T\let\@tempc\BooleanTrue
+          \fi\fi\fi}{%
+      \let\@tempc\BooleanTrue}%
+    \IfBooleanT{\@tempc}{%
+      % Calculate the hour of the day in ‘\@tempcnta’
+      % and the minute of the hour in ‘\@tempcntb’.
+      \@tempcntb\time
+      \@tempcnta\@tempcntb
+      \divide\@tempcnta 60
+      \count@\@tempcnta
+      \multiply\count@ 60
+      \advance\@tempcntb -\count@
+      \ifnum\@tempcnta<10 0\fi\the\@tempcnta
+      \def\@tempb{hour}%
+      \ifx\@tempa\@tempb\else
+        \if@tempswa:\fi
+        \ifnum\@tempcntb<10 0\fi\the\@tempcntb
+        \def\@tempb{minute}%
+        \ifx\@tempa\@tempb\else
+          \def\@tempb{second}%
+          \ifx\@tempa\@tempb\else
+            \PackageError{rsdatetime}{%
+              Unknown date and time precision `\@tempa'}{%
+              Type  <return>  to continue}%
+          \fi\fi\fi}}\ignorespaces}
+
+% local variables:
+% time-stamp-line-limit: 0
+% time-stamp-time-zone: "UTC"
+% time-stamp-format: "%:y/%02m/%02d"
+% time-stamp-start: "^\\\\Provides\\(Class\\|Package\\){[^}]*}\\["
+% time-stamp-end: "\\(\\s-\\|\\]\\)"
+% end:
+
+%% rsdatetime.sty ends here

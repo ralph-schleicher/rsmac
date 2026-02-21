@@ -1,0 +1,115 @@
+%% rsdisplay.sty --- displayed text
+
+% Copyright (C) 2023 Ralph Schleicher
+
+% Redistribution and use in source and binary forms, with or without
+% modification, are permitted provided that the following conditions
+% are met:
+%
+%    * Redistributions of source code must retain the above copyright
+%      notice, this list of conditions and the following disclaimer.
+%
+%    * Redistributions in binary form must reproduce the above copyright
+%      notice, this list of conditions and the following disclaimer in
+%      the documentation and/or other materials provided with the
+%      distribution.
+%
+%    * Neither the name of the copyright holder nor the names of its
+%      contributors may be used to endorse or promote products derived
+%      from this software without specific prior written permission.
+%
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+% "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+% LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+% FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE
+% COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+% INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+% BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+% LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+% CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+% LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+% ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+% POSSIBILITY OF SUCH DAMAGE.
+
+%% Code:
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{rsdisplay}[2026/02/20]
+
+% display
+%
+% Like the ‘displaymath’ environment but for vertical material.
+% The optional star argument omits the indentation.  This is a
+% nice alternative for a ‘here’ float.
+%
+% \begin{display}*
+% \includegraphics[height=25mm]{CTAN_lion_drawing_by_Duane_Bibby.pdf}
+% \captionof{figure}{CTAN Lion Drawing by Duane Bibby}
+% \end{display}
+\NewDocumentEnvironment{display}{s >{\SplitList{,}}o}{%
+  \rs@displayspec{#2}%
+  \ifvmode\else\par\fi
+  \list{}{%
+    \topsep\rs@displayskip
+    \partopsep\z@
+    \itemsep\z@
+    \parsep\parskip
+    \leftmargin\IfBooleanTF{#1}\z@\leftmargini
+    \rightmargin\z@
+    \listparindent\parindent
+    \itemindent\z@
+    \labelwidth\z@
+    \labelsep\z@
+    \@beginparpenalty\predisplaypenalty
+    \@endparpenalty\postdisplaypenalty
+  }\item\relax}{%
+  \endlist
+  \vskip-\parskip
+  \relax}
+
+% The display options.
+\def\rs@displayskip{}
+% Step 1: initialization.
+\def\rs@displayspeci{%
+  \let\rs@displayskip\bigskipamount}
+% Step 2: pre-processing.
+\def\rs@displayspecii#1{%
+  \def\@tempa{#1}%
+  \def\@tempb{big}%
+  \ifx\@tempa\@tempb
+    \let\rs@displayskip\bigskipamount
+  \else
+    \def\@tempb{medium}%
+    \ifx\@tempa\@tempb
+      \let\rs@displayskip\medskipamount
+    \else
+      \def\@tempb{small}%
+      \ifx\@tempa\@tempb
+        \let\rs@displayskip\smallskipamount
+      \else
+        \def\@tempb{none}%
+        \ifx\@tempa\@tempb
+          \let\rs@displayskip\z@
+        \else
+          \relax
+        \fi
+      \fi
+    \fi
+  \fi}
+% Step 3: post-processing.
+\def\rs@displayspeciii{}
+% All steps.
+\def\rs@displayspec#1{%
+  \rs@displayspeci
+  \ProcessList{#1}\rs@displayspecii
+  \rs@displayspeciii}
+
+% local variables:
+% time-stamp-line-limit: 0
+% time-stamp-time-zone: "UTC"
+% time-stamp-format: "%:y/%02m/%02d"
+% time-stamp-start: "^\\\\Provides\\(Class\\|Package\\){[^}]*}\\["
+% time-stamp-end: "\\(\\s-\\|\\]\\)"
+% end:
+
+%% rsdisplay.sty ends here

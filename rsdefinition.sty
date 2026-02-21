@@ -1,0 +1,293 @@
+%% rsdefinition.sty --- definition environment
+
+% Copyright (C) 2023 Ralph Schleicher
+
+% Redistribution and use in source and binary forms, with or without
+% modification, are permitted provided that the following conditions
+% are met:
+%
+%    * Redistributions of source code must retain the above copyright
+%      notice, this list of conditions and the following disclaimer.
+%
+%    * Redistributions in binary form must reproduce the above copyright
+%      notice, this list of conditions and the following disclaimer in
+%      the documentation and/or other materials provided with the
+%      distribution.
+%
+%    * Neither the name of the copyright holder nor the names of its
+%      contributors may be used to endorse or promote products derived
+%      from this software without specific prior written permission.
+%
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+% "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+% LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+% FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE
+% COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+% INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+% BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+% LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+% CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+% LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+% ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+% POSSIBILITY OF SUCH DAMAGE.
+
+%% Code:
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{rsdefinition}[2026/02/20]
+\RequirePackage{rsdisplay}
+\RequirePackage{rsmetasyntax}
+
+% definition
+%
+% For documenting commands and application programming interfaces.
+% Inside a ‘definition’ environment, use ‘\deffn’, ‘\defvr’, and
+% ‘\deftp’ to insert the signature of functions, variables, and
+% data types respectively.  The documentation is typeset after
+% the signature line.  Here are two examples:
+%
+%      \begin{definition}
+%      \defun{forward-line} &optional \var{n}
+%      Move \var{n} lines forward (backward if \var{n} is negative).
+%      \end{definition}
+%
+%      \begin{definition}
+%      \defun[double]{sin}(double \var{x})
+%      \defun[double]{cos}(double \var{x})
+%      Return the sine or cosine of \var{x} respectively.
+%      \end{definition}
+%
+\newif\ifrs@definition\rs@definitionfalse
+
+\NewDocumentEnvironment{definition}{O{medium}}{%
+  \display[#1]
+  \parindent\z@
+  \rs@definitiontrue}{%
+  \rs@definitionfalse
+  \enddisplay}
+
+% \definitionfont
+%
+% The main font for the signature line of a definition.
+\NewDocumentCommand\definitionfont{}{%
+  \slshape}
+
+% \definitioncategoryfont
+%
+% The font for the category of a definition.
+\NewDocumentCommand\definitioncategoryfont{}{%
+  \bfseries}
+
+% \rs@define{CATEGORY}*[DATA-TYPE]{SYMBOL-NAME}{ARG-LIST}
+%
+% Typeset the signature of a function, variable, or data type.
+% The paragraph shape is as follows:
+%
+% > DATA-TYPE<en>SYMBOL-NAME<en>FIRST-ARG SECOND-ARG<em>CATEGORY
+%   <indent><indent>THIRD-ARG FOURTH-ARG...
+%   <indent>Documentation text below the signature.
+\def\rs@define#1#2#3#4#5{%
+  \ifrs@definition\else
+    \PackageError{rsdefinition}{%
+      Signature not inside a definition environment}{%
+      Type  <return>  to continue}%
+  \fi
+  % Start a new paragraph.
+  \ifvmode\else\par\fi
+  % Typeset the signature.
+  \begingroup
+  \normalfont
+  \definitionfont
+  \frenchspacing
+  \parskip\z@
+  % The display width.
+  % We are in a list.
+  \dimen@\linewidth
+  \advance\dimen@\leftmargin
+  % The category of the definition.
+  \setbox\@tempboxa\hbox{\normalfont\definitioncategoryfont#1}%
+  % Length of the first line.
+  \@tempdima\dimen@
+  \advance\@tempdima-\wd\@tempboxa
+  \advance\@tempdima-1em
+  % Length of the second line.
+  \@tempdimc\linewidth
+  \advance\@tempdimc-\leftmargini
+  % Indentation of the first line.
+  \dimen@ii\@totalleftmargin
+  \advance\dimen@ii-\leftmargin
+  % Indentation of the second line.
+  \@tempdimb\@totalleftmargin
+  \advance\@tempdimb\leftmargini
+  % Set the paragraph shape.
+  \rightskip\z@ plus 1fil
+  \parshape\tw@ \dimen@ii\@tempdima \@tempdimb\@tempdimc
+  % If the star is present, typeset the data type of the value
+  % on a separate line.
+  \IfBlankF{#3}{%
+    \IfBooleanT{#2}{%
+      \leavevmode#3\par\nobreak}}%
+  % Start the signature line.
+  \leavevmode
+  % The category of the definition.
+  \rlap{\hbox to\dimen@{\hfil\unhbox\@tempboxa}}%
+  % If the star is not present, typeset the data type of the value.
+  \IfBlankF{#3}{%
+    \IfBooleanF{#2}{%
+      #3\/\enspace}}%
+  % The symbol name.
+  \symb{#4}\relax
+  % The argument list.
+  \IfBlankF{#5}{%
+    \enspace#5}%
+  % Done.
+  \par\nobreak
+  \endgroup}
+
+% Like ‘\rs@define’, but the fifth argument is a lambda list.
+% A lambda list is either a balanced group (in which case it can
+% span multiple lines) or the rest of the line.
+\def\rs@defun#1#2#3#4{%
+  \begingroup
+  % Save the parameters and prepare the lambda list reader.
+  \toks@{{#1}{#2}{#3}{#4}}\rs@lambdalist
+  % If the lambda list is a balanced group, read it.
+  % Otherwise, read the rest of the line.
+  \begingroup\obeylines\@ifnextchar\bgroup\rs@lambdalisti\rs@lambdalistiii}
+\def\rs@lambdalisti{%
+  % Undo the effect of ‘\obeylines’, then read the lambda list.
+  \endgroup\rs@lambdalistii}
+\def\rs@lambdalistii#1{%
+  % Call ‘\rs@define’ with five parameters.
+  \expandafter\rs@define\the\toks@{#1}\endgroup}
+{\catcode`\^^M\active % Don't remove this comment.
+ \gdef\rs@lambdalistiii#1^^M{\rs@lambdalisti{#1}}}
+
+% Lambda list features.
+\NewDocumentCommand\lambdalistkeywordfont{}{%
+  \normalfont\small}
+\NewDocumentCommand\lambdalistkeyword{m}{%
+  \mbox{\lambdalistkeywordfont\&#1}}
+
+\def\rs@lambdalistopen{$($}
+\def\rs@lambdalistclose{\/$)$}
+\def\rs@lambdalistkeyword{%
+  \@ifnextchar\bgroup\lambdalistkeyword\rs@lambdalistkeywordi}
+\def\rs@lambdalistkeywordi#1 {%
+  \lambdalistkeyword{#1}\space}
+{\catcode`\(\active
+ \catcode`\)\active
+ \catcode`\&\active
+ \gdef\rs@lambdalist{%
+   \catcode`\(\active
+   \catcode`\)\active
+   \catcode`\&\active
+   \let(\rs@lambdalistopen
+   \let)\rs@lambdalistclose
+   \let&\rs@lambdalistkeyword}}
+
+% Definitions with an explicit category.
+%
+% \deffn{CATEGORY}*[DATA-TYPE]{SYMBOL-NAME} LAMBDA-LIST
+\NewDocumentCommand\deffn{m s O{} m}{%
+  \rs@defun{#1}{#2}{#3}{#4}}%
+% \defvr{CATEGORY}*[DATA-TYPE]{SYMBOL-NAME}
+\NewDocumentCommand\defvr{m s O{} m}{%
+  \rs@define{#1}{#2}{#3}{#4}{}}
+% \deftp{CATEGORY}{SYMBOL-NAME}
+\NewDocumentCommand\deftp{m m}{%
+  \rs@define{#1}{}{}{#2}{}}
+
+% Lisp definitions.
+\newcommand*\defunname{Function}
+\newcommand*\defmacroname{Macro}
+\newcommand*\defspecname{Special Form}
+\newcommand*\defgenericname{Generic Function}
+\newcommand*\defmethodname{Method}
+\newcommand*\defvarname{Special Variable}
+\newcommand*\defoptname{User Option}
+\newcommand*\defparamname{Parameter}
+\newcommand*\defconstname{Constant}
+\newcommand*\deftypename{Data Type}
+\newcommand*\defstructname{Structure}
+\newcommand*\defclassname{Class}
+\newcommand*\defconditionname{Condition}
+
+\NewDocumentCommand\defun{s O{} m}{%
+  \rs@defun{\defunname}{#1}{#2}{#3}}%
+\NewDocumentCommand\defmacro{s O{} m}{%
+  \rs@defun{\defmacroname}{#1}{#2}{#3}}
+\NewDocumentCommand\defspec{s O{} m}{%
+  \rs@defun{\defspecname}{#1}{#2}{#3}}
+\NewDocumentCommand\defgeneric{s O{} m}{%
+  \rs@defun{\defgenericname}{#1}{#2}{#3}}
+\NewDocumentCommand\defmethod{s O{} m}{%
+  \rs@defun{\defmethodname}{#1}{#2}{#3}}
+
+\NewDocumentCommand\defvar{s O{} m}{%
+  \rs@define{\defvarname}{#1}{#2}{#3}{}}
+\NewDocumentCommand\defopt{s O{} m}{%
+  \rs@define{\defoptname}{#1}{#2}{#3}{}}
+\NewDocumentCommand\defparam{s O{} m}{%
+  \rs@define{\defparamname}{#1}{#2}{#3}{}}
+\NewDocumentCommand\defconst{s O{} m}{%
+  \rs@define{\defconstname}{#1}{#2}{#3}{}}
+
+\NewDocumentCommand\deftype{m}{%
+  \rs@define{\deftypename}{}{}{#1}{}}
+\NewDocumentCommand\defstruct{m}{%
+  \rs@define{\defstructname}{}{}{#1}{}}
+\NewDocumentCommand\defclass{m}{%
+  \rs@define{\defclassname}{}{}{#1}{}}
+\NewDocumentCommand\defcondition{m}{%
+  \rs@define{\defconditionname}{}{}{#1}{}}
+
+% Texinfo uses ‘@defmac’.
+\NewCommandCopy\defmac\defmacro
+
+% TeX definitions.
+\newcommand*\deftexname{Control Sequence}
+\newcommand*\defenvname{Environment}
+\newcommand*\defcountname{Counter}
+\newcommand*\defdimenname{Dimension}
+\newcommand*\defskipname{Glue}
+\newcommand*\defmuskipname{Math Glue}
+\newcommand*\defboxname{Box Register}
+\newcommand*\deftoksname{Token Register}
+\newcommand*\defifname{Conditional}
+
+\NewDocumentCommand\deftex{m}{%
+  \rs@defun{\deftexname}{}{}{#1}}
+\NewDocumentCommand\defenv{m}{%
+  \rs@defun{\defenvname}{}{}{#1}}
+
+\NewDocumentCommand\defcount{m}{%
+  \rs@define{\defcountname}{}{}{#1}{}}
+\NewDocumentCommand\defdimen{m}{%
+  \rs@define{\defdimenname}{}{}{#1}{}}
+\NewDocumentCommand\defskip{m}{%
+  \rs@define{\defskipname}{}{}{#1}{}}
+\NewDocumentCommand\defmuskip{m}{%
+  \rs@define{\defmuskipname}{}{}{#1}{}}
+\NewDocumentCommand\defbox{m}{%
+  \rs@define{\defboxname}{}{}{#1}{}}
+\NewDocumentCommand\deftoks{m}{%
+  \rs@define{\deftoksname}{}{}{#1}{}}
+\NewDocumentCommand\defif{m}{%
+  \rs@define{\defifname}{}{}{#1}{}}
+
+% Other definitions.
+\newcommand*\defcomname{Command}
+
+\NewDocumentCommand\defcom{s O{} m}{%
+  \rs@defun{\defcomname}{#1}{#2}{#3}}
+
+% local variables:
+% time-stamp-line-limit: 0
+% time-stamp-time-zone: "UTC"
+% time-stamp-format: "%:y/%02m/%02d"
+% time-stamp-start: "^\\\\Provides\\(Class\\|Package\\){[^}]*}\\["
+% time-stamp-end: "\\(\\s-\\|\\]\\)"
+% end:
+
+%% rsdefinition.sty ends here

@@ -1,0 +1,69 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{rsmetasyntax}
+
+\begin{document}
+\section{Verbatim Text}
+Execute the shell command ‘\code{ls -la~~\#\ that's\ hairy}’ to see all
+files.
+
+Execute the (more text before \code{\\code} to fill the line)
+shell command ‘\code*{ls -la \var{dir}  \#\ that's  hairy}’
+to see all files.
+
+All characters in \meta{argument} print itself except for the escape
+character \code\\ and the grouping characters \code\{ and \code\}.
+Two control sequences have another meaning than usual; \code{\\\ }
+prints a visible space and \code{\\\\} prints a backslash character.
+
+\textbackslash{} at the beginning of a line.  The grouping
+characters \{ and \} have to nest properly.
+
+\code\\ at the beginning of a line.  The grouping
+characters \code\{ and \code\} have to nest properly. (code)
+
+
+\section{Symbol Names}
+
+$|$\symb{\code}$|$ \\
+$|$\symb{\code*}$|$ \\
+$|$\symb{foo_bar}$|$ \\
+$|$\symb{*foo-bar*}$|$ \\
+$|$\symb{+foo-bar+}$|$ \\
+$|$\symb{struct dirent}$|$
+
+
+\section{Meta-Syntax}
+
+An environment for typesetting meta-syntax rules.  Can be used for
+documenting \TeX{} commands and \LaTeX{} environments.
+
+\begin{metasyntax}
+\start\meta{rule}\=\meta{non-terminal}\\=\meta{expression}
+\meta{expression}\=\meta{terminal}\|\meta{non-terminal}\|\meta{sequence}\|\meta{alternative}
+\&\|\meta{group}\|\meta{expression}\,\meta{kleene-operator}
+\meta{terminal}\=\meta{character}\+
+\meta{non-terminal}\=\\meta\{\meta{name}\}
+\meta{sequence}\=\meta{expression}\(\\,\meta{expression}\)\+
+\meta{alternative}\=\meta{expression}\(\\|\meta{expression}\)\+
+\meta{group}\=\\(\meta{expression}\\)\|\\group\{\meta{expression}\}
+\meta{kleene-operator}\=\\*\|\\+\|\\?
+\meta{character}\=a\dots z\|A\dots Z\|0\dots 9
+\&\|!\|"\|#\|$\|%\|&\|'\|(\|)\|*\|+\|,\|-\|.\|/\|:\|;\|<\|=\|>\|?\|@\|[\|]\|^\|_\|`\||\|~
+\&\|\meta{visible-space}\|\meta{backslash}\|\meta{left-brace}\|\meta{right-brace}\|\meta{dots}
+\meta{visible-space}\=\\\textvisiblespace
+\meta{backslash}\=\\\\
+\meta{left-brace}\=\\\{
+\meta{right-brace}\=\\\}
+\meta{dots}\=\\dots
+\end{metasyntax}
+%%$
+
+Rules are placed on a line by itself.  Use \code{\\\&} at the beginning
+of a line to continue a long rule.  Rules are usually wrapped before
+an alternative ‘\code{\\|}’ meta-symbol.
+
+Add \code{\\start} at the beginning of a line to mark the start rule
+of a grammar.
+\end{document}
