@@ -33,13 +33,32 @@
 
 ## Code:
 
-texmfdir = $(HOME)/lib/texmf
+PACKAGE := rsmac
+VERSION := $(shell head -n1 VERSION)
+TARNAME := $(PACKAGE)-$(VERSION)
+
+ifneq ($(TEXMFHOME),)
+texmfdir = $(TEXMFHOME)
+else # not TEXMFHOME
+ifneq ($(TEXMFLOCAL),)
+texmfdir = $(TEXMFLOCAL)
+else # not TEXMFLOCAL
+texmfdir = $(HOME)/texmf
+endif # not TEXMFLOCAL
+endif # not TEXMFHOME
 
 LATEX = pdflatex
 LATEX_FLAGS = -interaction=nonstopmode -file-line-error -shell-escape
 
 rsmacdir = $(texmfdir)/tex/latex/rsmac
-rsmac_DATA = rsmac.sty rsdisplay.sty rsmetasyntax.sty rsdefinition.sty rsdatetime.sty
+rsmac_DATA = \
+rsdisplay.sty \
+rsmetasyntax.sty \
+rsdefinition.sty \
+rsdatetime.sty \
+rsmac.sty
+
+### Rules
 
 %.pdf: %.tex $(rsmac_DATA)
 	-$(LATEX) $(LATEX_FLAGS) $<
@@ -69,5 +88,23 @@ clean:
 .PHONY: distclean
 distclean: clean
 	rm -f *.log *.pdf *.synctex.gz
+
+### Maintenance
+
+.PHONY: tag
+tag: all
+	@if test 0 != `svn status -q | grep -v "^ " | wc -l` ; then \
+	    echo "Working copy is not clean" >&2 ; \
+	    exit 1 ; \
+	fi
+	@if svn info "^/tags/$(TARNAME)" > /dev/null 2>&1 ; then \
+	    echo "Tag already exists" >&2 ; \
+	    exit 1 ; \
+	fi
+	svn copy "^/trunk" "^/tags/$(TARNAME)" -m "Version $(VERSION)."
+
+.PHONY: sync
+sync: all
+	~/src/github/github.sh $(PACKAGE)
 
 ## GNUmakefile ends here
