@@ -91,6 +91,14 @@
 \NewDocumentCommand\meta{m}{%
   \mbox{$\langle${\normalfont\slshape#1\/}$\rangle$}}
 
+% \kleene{...}
+%
+% Kleene operator for marking repetitive elements of a grammar.
+% Say, e.g. ‘\meta{expr}\kleene*’ for zero or more occurrences
+% of ‘\meta{expr}’.
+\NewDocumentCommand\kleene{m}{%
+  ${}^{#1}$}
+
 % metasyntax
 %
 % A simple BNF like syntax notation for documenting the syntax of
@@ -101,7 +109,7 @@
 \def\rs@metagroupopen{$\left(\right.$}
 \def\rs@metagroupclose{$\left.\right)$}
 \def\rs@metagroup#1{\rs@metagroupopen#1\rs@metagroupclose}
-\def\rs@metakleene#1{${}^{#1}$}
+\let\rs@metakleene\kleene
 \def\rs@metakleenestar{\rs@metakleene*}
 \def\rs@metakleeneplus{\rs@metakleene+}
 \def\rs@metaoptional{\rs@metakleene?}
