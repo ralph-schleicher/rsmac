@@ -40,11 +40,12 @@
 
 % definition
 %
-% For documenting commands and application programming interfaces.
-% Inside a ‘definition’ environment, use ‘\deffn’, ‘\defvr’, and
-% ‘\deftp’ to insert the signature of functions, variables, and
-% data types respectively.  The documentation is typeset after
-% the signature line.  Here are two examples:
+% A LaTeX environment for documenting commands and application
+% programming interfaces.  Inside a definition environment, use
+% ‘\deffn’, ‘\defvr’, or ‘\deftp’ to insert the signature of a
+% function, variable, or data type like entity respectively.
+% The documentation of the entity is added below the signature
+% line.  Here are two examples:
 %
 %      \begin{definition}
 %      \defun{forward-line} &optional \var{n}
@@ -70,22 +71,22 @@
 %
 % The main font for the signature line of a definition.
 \NewDocumentCommand\definitionfont{}{%
-  \slshape}
+  \normalfont\slshape}
 
 % \definitioncategoryfont
 %
 % The font for the category of a definition.
 \NewDocumentCommand\definitioncategoryfont{}{%
-  \bfseries}
+  \normalfont\bfseries\small}
 
 % \rs@define{CATEGORY}*[DATA-TYPE]{SYMBOL-NAME}{ARG-LIST}
 %
 % Typeset the signature of a function, variable, or data type.
 % The paragraph shape is as follows:
 %
-% DATA-TYPE<en>SYMBOL-NAME<en>FIRST-ARG SECOND-ARG<em>CATEGORY
-% <indent><indent>THIRD-ARG FOURTH-ARG...
-% <indent>Documentation text below the signature.
+%      DATA-TYPE<en>SYMBOL-NAME<en>FIRST-ARG SECOND-ARG<em>CATEGORY
+%      <indent><indent>THIRD-ARG FOURTH-ARG...
+%      <indent>Documentation text below the signature.
 \def\rs@define#1#2#3#4#5{%
   \ifrs@definition\else
     \PackageError{rsdefinition}{%
@@ -96,7 +97,6 @@
   \ifvmode\else\par\fi
   % Typeset the signature.
   \begingroup
-  \normalfont
   \definitionfont
   \frenchspacing
   \parskip\z@
@@ -105,7 +105,7 @@
   \dimen@\linewidth
   \advance\dimen@\leftmargin
   % The category of the definition.
-  \setbox\@tempboxa\hbox{\normalfont\definitioncategoryfont#1}%
+  \setbox\@tempboxa\hbox{\definitioncategoryfont#1}%
   % Length of the first line.
   \@tempdima\dimen@
   \advance\@tempdima-\wd\@tempboxa
@@ -129,7 +129,7 @@
       \leavevmode#3\par\nobreak}}%
   % Start the signature line.
   \leavevmode
-  % The category of the definition.
+  % Insert the category of the definition.
   \rlap{\hbox to\dimen@{\hfil\unhbox\@tempboxa}}%
   % If the star is not present, typeset the data type of the value.
   \IfBlankF{#3}{%
