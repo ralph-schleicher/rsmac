@@ -1,0 +1,277 @@
+%% rspackages.sty --- Ralph's favourite LaTeX packages
+
+% Copyright (C) 2023 Ralph Schleicher
+
+% Redistribution and use in source and binary forms, with or without
+% modification, are permitted provided that the following conditions
+% are met:
+%
+%    * Redistributions of source code must retain the above copyright
+%      notice, this list of conditions and the following disclaimer.
+%
+%    * Redistributions in binary form must reproduce the above copyright
+%      notice, this list of conditions and the following disclaimer in
+%      the documentation and/or other materials provided with the
+%      distribution.
+%
+%    * Neither the name of the copyright holder nor the names of its
+%      contributors may be used to endorse or promote products derived
+%      from this software without specific prior written permission.
+%
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+% "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+% LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+% FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE
+% COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+% INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+% BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+% LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+% CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+% LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+% ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+% POSSIBILITY OF SUCH DAMAGE.
+
+%% Code:
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{rspackages}[2026/02/20]
+
+%% =====================================
+%% Packages
+%% =====================================
+
+% Customize the encodings.
+\RequirePackage[T1]{fontenc}
+
+% LaTeX base packages.
+\RequirePackage{ifthen}
+\RequirePackage{alltt}
+
+% LaTeX tools.
+\RequirePackage{array}
+\RequirePackage{dcolumn}
+\RequirePackage{longtable}
+\RequirePackage{tabularx}
+\RequirePackage{multicol}
+\RequirePackage{verbatim}
+
+% Text alignment.
+\RequirePackage[newcommands]{ragged2e}
+
+% Lists.
+\RequirePackage{enumitem}
+
+% Mathematics.
+\RequirePackage[%
+  sumlimits,
+  intlimits,
+  namelimits,
+  fleqn,
+  reqno]{amsmath}
+\RequirePackage{siunitx}
+
+% Graphics bundle.
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{pdflscape}
+
+% The ‘hyperref’ package should be loaded after all other
+% packages.  Use coloured links instead of frames but keep
+% the colour of the text.
+\AddToHook{begindocument/before}{%
+  \RequirePackage{hyperref}
+  \hypersetup{%
+    colorlinks=true,
+    allcolors=.}
+  \let\urn\nolinkurl}
+
+%% =====================================
+%% General
+%% =====================================
+
+% Non-cumulative font changes.
+\DeclareOldFontCommand{\rm}{\normalfont\rmfamily}{\mathrm}
+\DeclareOldFontCommand{\sf}{\normalfont\sffamily}{\mathsf}
+\DeclareOldFontCommand{\tt}{\normalfont\ttfamily}{\mathtt}
+\DeclareOldFontCommand{\bf}{\normalfont\bfseries}{\mathbf}
+\DeclareOldFontCommand{\it}{\normalfont\itshape}{\mathit}
+\DeclareOldFontCommand{\sl}{\normalfont\slshape}{\@nomath\sl}
+\DeclareOldFontCommand{\sc}{\normalfont\scshape}{\@nomath\sc}
+
+% Font size for small displays.
+\NewDocumentCommand\smallsize{}{%
+  \footnotesize}
+
+% Basic indentation for lists and displays.
+\newlength\rs@indent
+\setlength\rs@indent{10mm}
+
+% Adjust indentation.
+\parindent\z@
+% This also sets ‘\mathindent’
+\AtBeginDocument{%
+  \@mathmargin\rs@indent\relax}
+
+% Adjust spacing.
+\def\rs@spacing{%
+  \ifcase\@ptsize
+    \bigskipamount 13.5pt plus 3pt minus 3pt
+    \medskipamount 6.75pt plus 1.5pt minus 1.5pt
+    \smallskipamount 3.375pt plus 0.75pt minus 0.75pt
+  \or %1 → 11pt
+    \bigskipamount 15pt plus 3pt minus 3pt
+    \medskipamount 7.5pt plus 1.5pt minus 1.5pt
+    \smallskipamount 3.75pt plus 0.75pt minus 0.75pt
+  \or %2 → 12pt
+    \bigskipamount 16.5pt plus 3pt minus 3pt
+    \medskipamount 8.25pt plus 1.5pt minus 1.5pt
+    \smallskipamount 4.125pt plus 0.75pt minus 0.75pt
+  \fi
+  % Displayed equations.
+  \abovedisplayskip\bigskipamount
+  \belowdisplayskip\bigskipamount
+  \abovedisplayshortskip\smallskipamount
+  \belowdisplayshortskip\bigskipamount
+  % Distance between the text and a ‘here’ float.
+  \intextsep\bigskipamount
+  % Distance between the text and a top or bottom float.
+  \textfloatsep\bigskipamount
+  % Distance between two floats.
+  \floatsep\bigskipamount
+  % Likewise for a double column layout.
+  \dbltextfloatsep\bigskipamount
+  \dblfloatsep\bigskipamount
+  % Distance between content and caption.
+  \abovecaptionskip\medskipamount
+  \belowcaptionskip\z@
+  % Distance between paragraphs.
+  \ifnum\parindent=\z@
+    \parskip\smallskipamount
+  \else
+    \parskip 0pt plus 0.75pt
+  \fi
+  % Vertical space above and below a ‘multicols’ environment.
+  \multicolsep\parskip
+  % KOMA-Script places the footnotes at the bottom of the page.
+  \raggedbottom
+  % Punctuation spacing is like word spacing.
+  \frenchspacing}
+\AtBeginDocument{%
+  \rs@spacing}
+% Fix ‘multicols’ environment.
+\AddToHook{cmd/endmulticols/after}{\unskip}
+
+%% =====================================
+%% Index
+%% =====================================
+
+\makeindex
+
+\def\indexsymhead{Symbols}
+\def\indexnumhead{Numbers}
+
+\RenewDocumentEnvironment{theindex}{}{%
+  \expandafter\ifx\csname addchap\endcsname\relax
+    \expandafter\ifx\csname chapter\endcsname\relax
+      \section\indexname
+    \else
+      \chapter\indexname
+     \fi
+  \else
+    \addchap\indexname
+  \fi
+  % The ‘multicols*’ environment does not balance
+  % the columns on the last page.
+  \begin{multicols*}{2}
+  \let\item\indexitem
+  \let\subitem\indexsubitem
+  \let\subsubitem\indexsubsubitem
+  \parskip 0pt plus 0.75pt\relax
+  \raggedright}{%
+  \end{multicols*}}
+\def\indexitem{\par\hangindent 1.5\rs@indent\relax}
+\def\indexsubitem{\par\hangindent 2.0\rs@indent\hskip 0.5\rs@indent\relax}
+\def\indexsubsubitem{\par\hangindent 2.5\rs@indent\hskip 1.0\rs@indent\relax}
+
+\ifcase 1
+  \let\indexspace\relax
+  \let\indexgroup\minisec
+\or %1
+  \let\indexspace\medskip
+  \let\indexgroup\@gobble
+\or %2
+  \let\indexspace\relax
+  \let\indexgroup\@gobble
+\fi
+% Like ‘\enspace’ but separate the page number more clearly.
+% Much better if the index entry contains spaces, too.
+\def\indexpagesep{\kern 1em }
+
+\ProvideDocumentCommand\printindex{}{%
+  \IfFileExists{\jobname.ind}{%
+    \input\jobname.ind }{}}
+
+%% =====================================
+%% Lists
+%% =====================================
+
+\topsep\z@
+\partopsep\z@
+\itemsep\z@
+\parsep\parskip
+
+\leftmargin\rs@indent
+\rightmargin\rs@indent
+\listparindent\parindent
+\labelsep 0.5em
+
+% Nested lists have the same relative indentation.
+\leftmargini\rs@indent
+\leftmarginii\rs@indent
+\leftmarginiii\rs@indent
+\leftmarginiv\rs@indent
+\leftmarginv\rs@indent
+\leftmarginvi\rs@indent
+
+% Package ‘enumitem’.
+%
+% Description lists don't make any assumptions
+% about the formatting of labels.
+\setlist{%
+  topsep=\z@,
+  partopsep=\z@,
+  itemsep=\z@,
+  parsep=\the\parskip,
+  leftmargin=\rs@indent,
+  rightmargin=\rs@indent,
+  listparindent=\parindent,
+  labelsep=0.5em}
+\setlist[enumerate]{%
+}
+\setlist[itemize]{%
+  label={--}}
+\setlist[description]{%
+  font=\normalfont,
+  style=nextline,
+  itemindent=\z@}
+
+%% =====================================
+%% Tables
+%% =====================================
+
+% LaTeX base.
+\def\arraystretch{1.5}
+
+% Package ‘longtable’.
+\setlength\LTleft\z@
+\setlength\LTright\fill
+
+% local variables:
+% time-stamp-line-limit: 0
+% time-stamp-time-zone: "UTC"
+% time-stamp-format: "%:y/%02m/%02d"
+% time-stamp-start: "^\\\\Provides\\(Class\\|Package\\){[^}]*}\\["
+% time-stamp-end: "\\(\\s-\\|\\]\\)"
+% end:
+
+%% rspackages.sty ends here
