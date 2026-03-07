@@ -76,8 +76,13 @@
 % \definitioncategoryfont
 %
 % The font for the category of a definition.
-\NewDocumentCommand\definitioncategoryfont{}{%
-  \normalfont\bfseries\small}
+\expandafter\ifx\csname usekomafont\endcsname\relax
+  \NewDocumentCommand\definitioncategoryfont{}{%
+    \normalfont\bfseries\small}
+\else
+  \NewDocumentCommand\definitioncategoryfont{}{%
+    \normalfont\usekomafont{disposition}\small}
+\fi
 
 % \rs@define{CATEGORY}*[DATA-TYPE]{SYMBOL-NAME}{ARG-LIST}
 %
