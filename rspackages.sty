@@ -41,7 +41,9 @@
 %% =====================================
 
 % Customize the encodings.
-\RequirePackage[T1]{fontenc}
+\expandafter\ifx\csname pdftexversion\endcsname\relax\else
+  \RequirePackage[T1]{fontenc}
+\fi
 
 % LaTeX base packages.
 \RequirePackage{ifthen}
@@ -265,6 +267,14 @@
 % Package ‘longtable’.
 \setlength\LTleft\z@
 \setlength\LTright\fill
+
+% Figure and table captions.
+\expandafter\ifx\csname KOMAoption\endcsname\relax\else
+  \setkomafont{caption}{\normalfont\small}
+  % Align all captions to the left.
+  \KOMAoption{captions}{nooneline}
+  \setcaptionalignment{l}
+\fi
 
 % local variables:
 % time-stamp-line-limit: 0
