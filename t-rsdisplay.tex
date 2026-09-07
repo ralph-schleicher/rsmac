@@ -1,8 +1,9 @@
-\documentclass{article}
+\documentclass[fleqn]{article}
 \usepackage{blindtext}
 \usepackage{rsdisplay}
 
 \begin{document}
+\parskip 1pt plus .75pt
 \noindent
 \verb|{display}| : \blindtext[1]
 \begin{display}
@@ -40,5 +41,15 @@ First line.
 Second line.
 The rest of it is just there to add more contents to the displayed text.
 \end{display}
+\verb|{display}[par]| : \blindtext[1]
+\begin{display}[par]
+First line.
+Second line.
+The rest of it is just there to add more contents to the displayed text.
+\end{display}
+\verb|{mathdisplay}| : \blindtext[1]
+\begin{displaymath}
+        \sin^2 x + \cos^2 x = 1
+\end{displaymath}
 \blindtext[1]
 \end{document}
