@@ -44,15 +44,26 @@
 % The star variant allows code breaks.
 %
 % Note: This macro depends on the font encoding; T1 works well.
+\def\rs@tie{%
+  \nobreak\space}
 \def\rs@tt{%
   \normalfont\ttfamily
   \let\ \textvisiblespace
   \let\\\textbackslash
   \let\^\textasciicircum
-  \let\~\textasciitilde}
+  \let\~\textasciitilde
+  \let~\rs@tie
+  \frenchspacing}
+\def\rs@alltt{%
+  \let\do\@makeother\dospecials
+  \catcode`\\=0 \catcode`\{=1 \catcode`\}=2
+  \obeyspaces
+  \rs@tt}
+\let\rs@bgroup\bgroup
+\def\rs@egroup#1{#1\egroup}
 
-\NewDocumentCommand\code{s m}{%
-  \IfBooleanF{#1}\mbox{\rs@tt\edef\next{#2}\next}}
+\NewDocumentCommand\code{s}{%
+  \IfBooleanF{#1}\mbox\rs@bgroup\rs@tt\rs@egroup}
 
 \NewDocumentCommand\codeitem{m}{%
   \item[\code{#1}]}
@@ -71,14 +82,14 @@
   % ‘\symb{\code*}’ expands to ‘\code *’.  Ensure that
   % ‘\zap@space’ is terminated by ‘ \@empty’.
   \edef\next{\expandafter\strip@prefix\meaning\next\space}%
-  % ‘\expandafter\zap@space\next’ does not strip leading spaces.
+  % ‘\zap@space’ does not strip leading spaces.
   \expandafter\expandafter\expandafter\zap@space\expandafter\ignorespaces\next\@empty
   \ifx#2\end\let\next\relax\else
     \space\def\next{\rs@meaningi#2}\fi
   \next}
 
 \NewDocumentCommand\symb{m}{%
-  \mbox{\normalfont\ttfamily\rs@meaning{#1}}}
+  \mbox{\normalfont\ttfamily\frenchspacing\rs@meaning{#1}}}
 
 \NewDocumentCommand\symbitem{m}{%
   \item[\symb{#1}]}
