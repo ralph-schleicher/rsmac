@@ -99,6 +99,8 @@
         \ifnum\@tempcntb<10 0\fi\the\@tempcntb
         \def\@tempb{minute}%
         \ifx\@tempa\@tempb\else
+          \if@tempswa:\fi
+          00\relax
           \def\@tempb{second}%
           \ifx\@tempa\@tempb\else
             \PackageError{rsdatetime}{%
