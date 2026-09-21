@@ -172,14 +172,16 @@
 \NewDocumentCommand\lambdalistkeywordfont{}{%
   \normalfont\small}
 \NewDocumentCommand\lambdalistkeyword{m}{%
-  \mbox{\lambdalistkeywordfont\&#1}}
+  \mbox{\lambdalistkeywordfont #1}}
 
 \def\rs@lambdalistopen{$($}
 \def\rs@lambdalistclose{\/$)$}
 \def\rs@lambdalistkeyword{%
-  \@ifnextchar\bgroup\lambdalistkeyword\rs@lambdalistkeywordi}
-\def\rs@lambdalistkeywordi#1 {%
-  \lambdalistkeyword{#1}\space}
+  \@ifnextchar\bgroup\rs@lambdalistkeywordi\rs@lambdalistkeywordii}
+\def\rs@lambdalistkeywordi#1{%
+  \lambdalistkeyword{\&#1}}
+\def\rs@lambdalistkeywordii#1 {%
+  \lambdalistkeyword{\&#1}\space}
 {\catcode`\(\active
  \catcode`\)\active
  \catcode`\&\active
