@@ -36,12 +36,16 @@
 % Write group headers using uppercase letters.
 headings_flag 1
 
+% Say ‘\let\indexgroup\@gobble’ to omit group headers.
 heading_prefix "  \\indexgroup{"
 heading_suffix "}"
 
+% Say ‘\def\indexsymhead{Symbols}’ and ‘\def\indexnumhead{Numbers}’
+% to get the built-in behavior.
 symhead_positive "\\indexsymhead"
 numhead_positive "\\indexnumhead"
 
+% Say ‘\def\indexpagesep{, }’ to get the built-in behavior.
 delim_0 "\\indexpagesep"
 delim_1 "\\indexpagesep"
 delim_2 "\\indexpagesep"
