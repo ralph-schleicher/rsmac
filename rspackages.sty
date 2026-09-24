@@ -169,8 +169,40 @@
 
 \makeindex
 
-\def\indexsymhead{Symbols}
-\def\indexnumhead{Numbers}
+\ProvideDocumentCommand\printindex{}{%
+  \IfFileExists{\jobname.ind}{%
+    \input\jobname.ind }{}}
+
+% Group headers.
+\NewDocumentCommand\indexsymbolsname{}{Symbols}
+\NewDocumentCommand\indexnumbersname{}{Numbers}
+
+\def\indexsymhead{\indexsymbolsname}
+\def\indexnumhead{\indexnumbersname}
+
+% No extra vertical space between groups.
+\let\indexspace\relax
+% No group headers.
+\let\indexgroup\@gobble
+
+\ifcase 2
+\or %1
+  % Print group headers.
+  \let\indexspace\relax
+  \let\indexgroup\minisec
+\or %2
+  % No group headers, only extra vertical space between groups.
+  \let\indexspace\medskip
+  \let\indexgroup\@gobble
+\fi
+
+% Like ‘\enspace’ but separate the page number more clearly.
+% Much better if the index entry contains spaces, too.
+\def\indexpagesep{\kern 1em }
+
+\def\indexitem{\par\hangindent 1.5\rs@indent\relax}
+\def\indexsubitem{\par\hangindent 2.0\rs@indent\hskip 0.5\rs@indent\relax}
+\def\indexsubsubitem{\par\hangindent 2.5\rs@indent\hskip 1.0\rs@indent\relax}
 
 \RenewDocumentEnvironment{theindex}{}{%
   \expandafter\ifx\csname addchap\endcsname\relax
@@ -191,27 +223,6 @@
   \parskip 0pt plus 0.75pt\relax
   \raggedright}{%
   \end{multicols*}}
-\def\indexitem{\par\hangindent 1.5\rs@indent\relax}
-\def\indexsubitem{\par\hangindent 2.0\rs@indent\hskip 0.5\rs@indent\relax}
-\def\indexsubsubitem{\par\hangindent 2.5\rs@indent\hskip 1.0\rs@indent\relax}
-
-\ifcase 1
-  \let\indexspace\relax
-  \let\indexgroup\minisec
-\or %1
-  \let\indexspace\medskip
-  \let\indexgroup\@gobble
-\or %2
-  \let\indexspace\relax
-  \let\indexgroup\@gobble
-\fi
-% Like ‘\enspace’ but separate the page number more clearly.
-% Much better if the index entry contains spaces, too.
-\def\indexpagesep{\kern 1em }
-
-\ProvideDocumentCommand\printindex{}{%
-  \IfFileExists{\jobname.ind}{%
-    \input\jobname.ind }{}}
 
 %% =====================================
 %% Lists
