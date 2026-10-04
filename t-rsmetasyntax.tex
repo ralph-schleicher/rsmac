@@ -4,12 +4,65 @@
 \usepackage{rsmetasyntax}
 
 \begin{document}
-\section{Verbatim Text}
-Execute the shell command ‘\code{ls -la~~\#\ that's\ hairy}’ to see all
-files.
+\noindent
+Single space ‘\code{ }’ \\
+Double space ‘\code{  }’ \\
+Single tab ‘\code{      }’ \\
+Double tab ‘\code{          }’ \\
+Single tilde ‘\code{~}’ \\
+Control space ‘\code{\ }’ \\
+Escaped specials \code{\\}, \code{\{}, \code{\}}, \code{\#},
+\code{\$}, \code{\%}, \code{\&}, \code{\^}, \code{\_}, and \code{\~} \\
+Ligatures \symb{\tt}: {\tt affe flasche},
+\symb{\code}: \code{affe flasche}
 
-Execute the (more text before \code{\\code} to fill the line)
-shell command ‘\code*{ls -la \var{dir}  \#\ that's  hairy}’
+\begingroup
+\def\q[#1]{‘#1’}
+\noindent
+As argument for \symb{\q}. \\
+Single tilde \q[\code{~}] \\
+Control space \q[\code{\ }] \\
+Escaped specials
+\q[\code{\\}],
+\q[\code{\{}],
+\q[\code{\}}],
+\q[\code{\#}],
+\q[\code{\$}],
+\q[\code{\%}],
+\q[\code{\&}],
+\q[\code{\^}],
+\q[\code{\_}], and
+\q[\code{\~}].
+\endgroup
+
+\noindent
+Description list.
+\begin{description}
+\item[‘\code{ }’] Single space
+\item[‘\code{  }’] Double space
+\item[‘\code{      }’] Single tab
+\item[‘\code{          }’] Double tab
+\item[‘\code{~}’] Single tilde
+\item[‘\code{\ }’] Control space
+\item[\code{\\}, \code{\{}, \code{\}}, \code{\#}, \code{\$}, \code{\%},
+\code{\&}, \code{\^}, \code{\_}, and \code{\~}] Escaped specials
+\item[\symb{\tt}: {\tt affe flasche}] Ligatures
+\item[\symb{\code}: \code{affe flasche}] Ditto
+\end{description}
+
+\symb{alltt} environment:
+\begin{alltt}
+Space ‘ ’
+Tilde ‘~’
+Control space ‘\ ’
+\end{alltt}
+
+
+\section{Verbatim Text}
+To list all files in a directory, execute the shell command ‘\code{ls -la \meta{dir} \#\ that's\  hairy}’.
+
+Execute (more text before \code{\\code} to fill the line) command
+‘\code*{ls -la \meta{dir}  \#\ that's\  hairy}’
 to see all files.
 
 All characters in \meta{argument} print itself except for the escape
