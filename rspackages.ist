@@ -40,14 +40,17 @@ headings_flag 1
 heading_prefix "  \\indexgroup{"
 heading_suffix "}"
 
-% Say ‘\def\indexsymhead{Symbols}’ and ‘\def\indexnumhead{Numbers}’
+% Say ‘\def\indexsymbolsname{Symbols}’ and ‘\def\indexnumbersname{Numbers}’
 % to get the built-in behavior.
-symhead_positive "\\indexsymhead"
-numhead_positive "\\indexnumhead"
+symhead_positive "\\indexsymbolsname"
+numhead_positive "\\indexnumbersname"
 
 % Say ‘\def\indexpagesep{, }’ to get the built-in behavior.
 delim_0 "\\indexpagesep"
 delim_1 "\\indexpagesep"
 delim_2 "\\indexpagesep"
+
+suffix_2p "f."
+suffix_3p "ff."
 
 %% rspackages.ist ends here
