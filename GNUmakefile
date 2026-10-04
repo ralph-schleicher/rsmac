@@ -56,7 +56,7 @@ rsdisplay.sty \
 rsmetasyntax.sty \
 rsdefinition.sty \
 rsdatetime.sty \
-rsmac.sty
+rsmacros.sty
 
 ### Rules
 
@@ -91,8 +91,23 @@ distclean: clean
 
 ### Maintenance
 
+.PHONY: doc
+doc: rsuserguide.pdf
+rsuserguide.pdf: rsuserguide.tex $(rsmac_DATA)
+	$(LATEX) $(LATEX_FLAGS) rsuserguide.tex
+	splitindex -v rsuserguide.idx -- -c -s rspackages.ist
+	$(LATEX) $(LATEX_FLAGS) rsuserguide.tex
+
+.PHONY: package-date
+package-date:
+	@latest=`grep -F "\\ProvidesPackage" $(rsmac_DATA) | sort -t \[ -k 2 | tail -n 1 | sed -e 's/.*\[//' -e 's/\].*//'` ; \
+	if grep -q -F "\\ProvidesPackage{rsmacros}[$$latest]" rsmacros.sty ; then : ; else \
+	    echo "rsmacros.sty: package date is not $$latest" >&2 ; \
+	    exit 1 ; \
+	fi
+
 .PHONY: tag
-tag: all
+tag: all package-date
 	@if test 0 != `svn status -q | grep -v "^ " | wc -l` ; then \
 	    echo "Working copy is not clean" >&2 ; \
 	    exit 1 ; \
