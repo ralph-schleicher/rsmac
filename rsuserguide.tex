@@ -1,0 +1,1556 @@
+%% rsuserguide.tex --- user guide and reference manual
+
+% Copyright (C) 2023 Ralph Schleicher
+
+% Redistribution and use in source and binary forms, with or without
+% modification, are permitted provided that the following conditions
+% are met:
+%
+%    * Redistributions of source code must retain the above copyright
+%      notice, this list of conditions and the following disclaimer.
+%
+%    * Redistributions in binary form must reproduce the above copyright
+%      notice, this list of conditions and the following disclaimer in
+%      the documentation and/or other materials provided with the
+%      distribution.
+%
+%    * Neither the name of the copyright holder nor the names of its
+%      contributors may be used to endorse or promote products derived
+%      from this software without specific prior written permission.
+%
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+% "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+% LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+% FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE
+% COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+% INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+% BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+% LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+% CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+% LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+% ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+% POSSIBILITY OF SUCH DAMAGE.
+
+%% Code:
+
+\documentclass{scrartcl}
+\usepackage{rspackages}
+\usepackage{amssymb} %for \checkmark
+\usepackage{scrlogo} %for \KOMAScript
+\usepackage{rsmacros}
+
+\makeatletter
+
+\NewDocumentCommand\env{m}{\code{#1}\thinspace\textsubscript{env}}
+\NewDocumentCommand\sty{m}{\code{#1}\thinspace\textsubscript{sty}}
+\NewDocumentCommand\cls{m}{\code{#1}\thinspace\textsubscript{cls}}
+
+% An index for the symbol names, i.e. LaTeX control sequences and
+% environments.
+\newindex[Symbol Index]{sym}
+
+% Add an entry to the symbol index.
+%
+% The mandatory argument is the symbol name.
+% The optional argument provides the sorting rule.
+% The star variant makes no assumption about the formatting of the
+%  symbol name.  Default is to format it with the ‘\symb’ command.
+\NewDocumentCommand\symindex{s o m}{%
+  \IfBooleanTF{#1}{%
+    % Star is present.
+    \IfNoValueTF{#2}{%
+      \index[sym]{#3}}{%
+      \index[sym]{#2@#3}}}{%
+    % Without star.
+    \IfNoValueTF{#2}{%
+      \index[sym]{#3@\symb{#3}}}{%
+      \index[sym]{#2@\symb{#3}}}}}
+
+% TeX control sequence.
+\NewDocumentCommand\texindex{m}{%
+  \symindex*{#1@\code{\\#1}}}
+\NewDocumentCommand\texindexvisiblespace{}{%
+  \symindex*{\ @\code{\\\ }}}
+% LaTeX environment.
+\NewDocumentCommand\envindex{m}{%
+  \symindex*{#1@\env{#1}}}
+% LaTeX package.
+\NewDocumentCommand\styindex{m}{%
+  \index{#1@\sty{#1}}}
+
+\NewDocumentCommand\anchor{m}{%
+  \hypertarget{#1}{}}
+\NewDocumentCommand\texanchor{m}{%
+  \hypertarget{tex:#1}{}}
+\NewDocumentCommand\envanchor{m}{%
+  \hypertarget{env:#1}{}}
+\NewDocumentCommand\texref{m}{%
+  \hyperlink{tex:#1}{\code{\\#1}}}
+\NewDocumentCommand\envref{m}{%
+  \hyperlink{env:#1}{\code{#1}}}
+
+\makeatother
+
+\title{Ralph's \LaTeX{} Macros}
+\author{Copyright \copyright{} 2023 Ralph Schleicher\footnote{%
+Permission is granted to copy, distribute, and/or modify this
+document under the terms of the GNU Free Documentation License,
+Version 1.3 or any later version published by the Free Software
+Foundation; with no Invariant Sections, no Front-Cover Texts,
+and no Back-Cover Texts.}}
+\date{Version 1.1}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+
+\section{Introduction}
+
+Ralph's \LaTeX{} macros is a collection of frequently used packages,
+commands, and environments for writing \LaTeX{} documents.  The first
+part is a selection of useful standard \LaTeX{} packages.  The second
+part are Ralph's own \LaTeX{} commands and environments, which exist
+either because there is no standard \LaTeX{} equivalent or as a matter
+of style.
+
+
+\section{Standard \LaTeX{} Packages}
+
+\styindex{rspackages}
+The \code{rspackages} package loads a selection of standard \LaTeX{}
+packages.  That is,
+
+\begin{description}
+\item[\href{https://mirrors.ctan.org/macros/latex/base/encguide.pdf}{\code{fontenc}}]
+\styindex{fontenc}
+\index{font encoding}
+\index{encoding!font}
+If the \TeX{} engine is \code{latex} or \code{pdflatex}, enable the
+T1 font encoding.  Otherwise, do nothing.
+
+\item[\href{https://mirrors.ctan.org/macros/latex/base/ifthen.pdf}{\code{ifthen}}]
+\styindex{ifthen}
+\texindex{ifthenelse}
+\index{conditional}
+This package provides the \symb{\ifthenelse} command.
+
+\item[\href{https://mirrors.ctan.org/macros/latex/base/alltt.pdf}{\code{alltt}}]
+\styindex{alltt}
+\envindex{alltt}
+\envindex{verbatim}
+This package provides the \code{alltt} environment, which is like the
+\code{verbatim} environment, except that the escape character \code{\\}
+and the grouping characters \code{\{} and \code{\}} have their usual
+meaning.
+
+\item[\href{https://mirrors.ctan.org/macros/latex/required/tools/array.pdf}{\code{array}}]
+\styindex{array}
+\envindex{array}
+\envindex{tabular}
+This package provides the \code{array} and \code{tabular} environments.
+
+\item[\href{https://mirrors.ctan.org/macros/latex/required/tools/dcolumn.pdf}{\code{dcolumn}}]
+\styindex{dcolumn}
+\index{decimal point}
+\index{alignment!decimal point}
+This package provides a system for aligning table column entries at
+the decimal point.
+
+\item[\href{https://mirrors.ctan.org/macros/latex/required/tools/longtable.pdf}{\code{longtable}}]
+\styindex{longtable}
+\envindex{longtable}
+\index{multi-page table}
+\index{table!multi-page}
+This package provides the \code{longtable} environment for typesetting
+multi-page tables.
+
+\item[\href{https://mirrors.ctan.org/macros/latex/required/tools/tabularx.pdf}{\code{tabularx}}]
+\styindex{tabularx}
+\envindex{tabularx}
+\envindex{tabular*}
+This package provides the \code{tabularx} environment, which is like
+the \code{tabular*} environment, but modifies the widths of certain
+columns, rather than the inter column space, to set a table with the
+requested total width.
+
+\item[\href{https://mirrors.ctan.org/macros/latex/required/tools/multicol.pdf}{\code{multicol}}]
+\styindex{multicol}
+\envindex{multicols}
+\index{multi-column format}
+\index{format!multi-column}
+This package provides the \code{multicols} environment which allows
+switching between single-column and multi-column format on the same
+page.
+
+\item[\href{https://mirrors.ctan.org/macros/latex/required/tools/verbatim.pdf}{\code{verbatim}}]
+\styindex{verbatim}
+\envindex{verbatim}
+\texindex{verbatiminput}
+This package provides a new implementation of the \code{verbatim}
+environment.  It also defines the \symb{\verbatiminput} command to
+input a whole file verbatim
+
+\item[\href{https://mirrors.ctan.org/macros/latex/contrib/ragged2e/ragged2e.pdf}{\code{ragged2e}}]
+\styindex{ragged2e}
+\envindex{center}
+\envindex{flushleft}
+\envindex{flushright}
+\texindex{centering}
+\texindex{raggedleft}
+\texindex{raggedright}
+This package provides a new implementation of the text alignment
+environments \code{center}, \code{flushleft}, and \code{flushright},
+and the respective \symb{\centering}, \symb{\raggedleft}, and
+\symb{\raggedright} commands.
+
+\item[\href{https://mirrors.ctan.org/macros/latex/contrib/enumitem/enumitem.pdf}{\code{enumitem}}]
+\styindex{enumitem}
+\envindex{enumerate}
+\envindex{itemize}
+\envindex{description}
+This package provides a new implementation of the three basic list
+environments \code{enumerate}, \code{itemize}, and \code{description}.
+
+\item[\href{https://mirrors.ctan.org/macros/latex/required/amsmath/amsldoc.pdf}{\code{amsmath}}]
+\styindex{amsmath}
+\index{alignment!equation}
+This package provides miscellaneous enhancements for typesetting
+mathematical formulas.  Displayed equations are aligned to the left
+margin and equation numbers are placed on the right.  For integral
+symbols, large operator symbols, and named operators, limits are
+typeset below and above the symbol.
+
+\item[\href{https://mirrors.ctan.org/macros/latex/contrib/siunitx/siunitx.pdf}{\code{siunitx}}]
+\styindex{siunitx}
+\index{physical quantity}
+\index{quantity}
+\index{number}
+\index{unit}
+This package provides commands for typesetting physical quantities and
+units in a consistent way.
+
+\item[\href{https://mirrors.ctan.org/macros/latex/contrib/xcolor/xcolor.pdf}{\code{xcolor}}]
+\styindex{xcolor}
+\styindex{color}
+\index{color}
+This package provides extensions to the basic facilities of the
+\code{color} package.
+
+\item[\href{https://mirrors.ctan.org/macros/latex/required/graphics/grfguide.pdf}{\code{graphicx}}]
+\styindex{graphicx}
+\styindex{graphics}
+\texindex{includegraphics}
+This package provides extensions to the basic facilities of the
+\code{graphics} package.  It also defines the \symb{\includegraphics}
+command.
+
+\item[\href{https://mirrors.ctan.org/macros/latex/contrib/pdflscape/pdflscape.pdf}{\code{pdflscape}}]
+\styindex{pdflscape}
+\envindex{landscape}
+This package provides PDF support for the \code{landscape} environment.
+
+\item[\href{https://mirrors.ctan.org/macros/latex/contrib/splitindex/splitidx.pdf}{\code{splitidx}}]
+\styindex{splitidx}
+\texindex{newindex}
+\texindex{index}
+This package provides support for creating multiple indices.  The
+\symb{\newindex} command can be used to create an additional index.
+The \symb{\index} command is redefined so that you can add an index
+entry to a dedicated index.  The \code{splitidx} package is loaded
+with the \code{protect} option to avoid premature expansion of
+\symb{\index} arguments.
+
+\item[\href{https://mirrors.ctan.org/macros/latex/contrib/hyperref/doc/hyperref-doc.pdf}{\code{hyperref}}]
+\styindex{hyperref}
+\index{hypertext link}
+\index{link!hypertext}
+This package provides extensive support for hypertext links in
+\LaTeX{}.  Links are neither framed nor coloured.
+\end{description}
+
+The \code{rspackages} package is best loaded directly after the
+document class, e.g.
+\begin{display}
+\begin{verbatim}
+\documentclass{scrartcl}
+\usepackage{rspackages}
+\end{verbatim}
+\end{display}
+
+
+\subsection{Layout and Formatting}
+
+All the loaded packages are configured for a consistent style.
+
+\begin{definition}
+\texindex{rs@indent}
+\texanchor{rs@indent}
+\defdimen{\rs@indent}
+The basic indentation for lists and displays.
+Default is \qty{10}{mm}.
+\end{definition}
+
+\index{nested list}
+\index{list!nested}
+Nested lists have the same relative indentation.  The default label
+for itemized lists is an en-dash.  Description lists don't make any
+assumption about the formatting of labels.
+
+Sometimes you may want to typeset some content in a slightly smaller
+font so that the whole thing does not take up too much space.  There
+is a command for this purpose which sets the font size accordingly.
+
+\begin{definition}
+\texindex{smallsize}
+\texanchor{smallsize}
+\deftex{\smallsize}
+The font size for small displays.
+Default is \symb{\footnotesize}.
+\end{definition}
+
+
+\subsection{Managing Indices}
+
+\index{index}
+\texindex{makeindex}
+\texindex{printindex}
+\envindex{theindex}
+The \code{rspackages} package calls \symb{\makeindex} and it provides
+a \symb{\printindex} command that does the right thing, whether or not
+you use a single index or multiple indices.  The \code{theindex}
+environment is redefined so that it only prints the actual index in
+double-column format.  That means, you must provide the sectioning
+command when printing an index in your document.  Here is an example
+for the indices of a programming reference manual.
+\begin{display}
+\begin{verbatim}
+\chapter{Index}
+\section*{Concept Index}
+\printindex
+\section*{Symbol Index}
+\printindex[sym]
+\end{verbatim}
+\end{display}
+This behaviour of the \code{theindex} environment gives you full
+control over how to print an index, whether or not it appears in the
+table of contents, and what is printed before and after it -- without
+further ado.
+
+\index{index!style file}
+\index{style file!index}
+\index{rspackages.ist@\code{rspackages.ist}}
+\index{jobname.ind@\code{\meta{job-name}.ind}}
+An index style file ‘\code{rspackages.ist}’ is installed along with
+the \code{rspackages} package.  The recommended shell command to
+create the index file \code{\meta{job-name}.ind} is as follows.
+\index{makeindex@\code{makeindex}}
+\begin{display}
+\begin{alltt}
+makeindex -c -s rspackages.ist \meta{job-name}.idx
+\end{alltt}
+\end{display}
+\index{splitindex@\code{splitindex}}
+If you use multiple indices, call \code{splitindex} instead.
+\begin{display}
+\begin{alltt}
+splitindex -v \meta{job-name}.idx -- -c -s rspackages.ist
+\end{alltt}
+\end{display}
+When the index style file ‘\code{rspackages.ist}’ is applied, the
+final index files have the following format.
+\begin{display}
+\begin{verbatim}
+\begin{theindex}
+\indexgroup{\indexsymbolsname}
+\item \$ (dollar sign)\indexpagesep 1
+\indexspace
+\indexgroup{\indexnumbersname}
+\item 0 (zero)\indexpagesep 1
+\indexspace
+\indexgroup{A}
+\item an entry\indexpagesep 1
+\end{theindex}
+\end{verbatim}
+\end{display}
+
+\begin{definition}
+\texindex{indexsymbolsname}
+\texanchor{indexsymbolsname}
+\deftex{\indexsymbolsname}
+The name for the symbols group.
+Default is “\indexsymbolsname”.
+\end{definition}
+
+\begin{definition}
+\texindex{indexnumbersname}
+\texanchor{indexnumbersname}
+\deftex{\indexnumbersname}
+The name for the numbers group.
+Default is “\indexnumbersname”.
+\end{definition}
+
+\begin{definition}
+\texindex{indexspace}
+\texanchor{indexspace}
+\deftex{\indexspace}
+The space between adjacent groups.
+Default is \symb{\medskip}.
+\end{definition}
+
+\begin{definition}
+\texindex{indexgroup}
+\texanchor{indexgroup}
+\deftex{\indexgroup} \meta{name}
+The sectioning command for the group header.
+Default is \symb{\minisec}.
+
+Argument \meta{name} is the header of the group.
+\end{definition}
+
+\begin{definition}
+\texindex{indexpagesep}
+\texanchor{indexpagesep}
+\deftex{\indexpagesep}
+The delimiter between the index entry and the page number.
+Default is an em-space.
+\end{definition}
+
+The default behaviour of the \code{theindex} environment is to omit
+group headers and only insert \texref{indexspace} between groups.  If
+you redefine the \code{theindex} environment, you must call
+\texref{indexsetup} at the beginning of the index.
+\begin{display}
+\begin{verbatim}
+\RenewDocumentEnvironment{theindex}{}{%
+  % The ‘multicols*’ environment does not balance
+  % the columns on the last page.
+  \begin{multicols*}{2}
+  \indexsetup[headers]}{%
+  \end{multicols*}}
+\end{verbatim}
+\end{display}
+
+\begin{definition}
+\texindex{indexsetup}
+\texanchor{indexsetup}
+\deftex{\indexsetup} \meta{options}\kleene?
+Adjust the typesetting commands and formatting parameters for the
+index.  Must be called locally in a \TeX{} group.
+
+Optional argument \meta{options} is a comma separated list of
+options to change the formatting of the index.
+\begin{description}
+\item[\code{headers}]
+Print group headers.
+
+\item[\code{nogroups}]
+Disable grouping, i.e. omit group headers and disable
+\symb{\indexspace}.
+
+\item[\code{comma}]
+Separate the index entry and the page number by a comma followed
+by a space.
+\end{description}
+\end{definition}
+
+
+\section{Ralph's \LaTeX{} Macros}
+
+\styindex{rsmacros}
+Ralph's \LaTeX{} macros can be loaded all at once by using the
+\code{rsmacros} package or individually as documented in the
+respective section.
+
+
+\subsection{Displayed Text}
+
+\styindex{rsdisplay}
+The \code{rsdisplay} package provides the \code{display} environment
+for displayed text.
+
+% display
+% ----------------------------------------------------------------------
+\begin{definition}
+\envindex{display}
+\envanchor{display}
+\defenv{display} \code{*}\kleene? \meta{options}\kleene?
+Like the \code{displaymath} environment but for vertical material.
+This environment indents the left margin and inserts space above and
+below the text body.
+\begin{itemize}
+\item The optional star argument omits the indentation.  This is a
+nice alternative for a ‘here’ float.
+\item Optional argument \meta{options} is a comma separated list of
+options.
+\begin{description}
+\codeitem{big}
+Vertical space around the displayed content is a
+\symb{\bigskipamount}.  This is the default.
+\codeitem{medium}
+Vertical space around the displayed content is a
+\symb{\medskipamount}.
+\codeitem{small}
+Vertical space around the displayed content is a
+\symb{\smallskipamount}.
+\codeitem{par}
+Vertical space around the displayed content is a
+\symb{\parskip}.
+\codeitem{none}
+No vertical space around the displayed content.
+\end{description}
+\end{itemize}
+\end{definition}
+
+For example,
+\begin{display}
+\begin{verbatim}
+\begin{display}
+Some text to be displayed.
+\end{display}
+\end{verbatim}
+\end{display}
+is printed as
+\begin{display}
+Some text to be displayed.
+\end{display}
+Displayed math
+\begin{displaymath}
+\sin^2 x + \cos^2 x = 1
+\end{displaymath}
+has the same spacing.
+
+
+\subsection{Code and Syntax}
+
+\styindex{rsmetasyntax}
+The \code{rsmetasyntax} package provides macros for indicating
+commands, symbol names (identifiers), and meta-syntactic variables.
+
+% code
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{code}
+\texanchor{code}
+\deftex{\code} \code{*}\kleene? \meta{text}
+\index{literal text}
+Print \meta{text} as literal text in a typewriter type font.
+The special characters
+\begin{display}
+\code{\\}\quad
+\code{\{}\quad
+\code{\}}\quad
+\code{\#}\quad
+\code{\$}\quad
+\code{\%}\quad
+\code{\&}\quad
+\code{\^}\quad
+\code{\_}\quad
+\code{\~}
+\end{display}
+must be escaped.
+\index{backslash}
+\symindex{\\}
+\index{visible space}
+\texindexvisiblespace
+Two control sequences have another meaning than usual; \code{\\\\}
+prints a backslash character and \code{\\\ } prints a visible space.
+The star variant allows line breaks in \meta{text}.  Whitespace is not
+significant in \meta{text} but the active tilde character can be used
+to inserts a no-break space.
+
+As a rule of thumb, single word commands, options, and symbol names
+should be printed without quotes.  Examples on the other hand, should
+be printed with single quotes.
+\end{definition}
+
+% symb
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{symb}
+\texanchor{symb}
+\deftex{\symb} \meta{name}
+\index{symbol name}
+\index{identifier}
+Print \meta{name} as a symbol, i.e. as a command or programming
+language identifier.  The formatting of the \symb{\symb} macro is like
+\symb{\code} but all characters in \meta{name} print itself.  For
+example, ‘\code{\\symb\{\\symb\}}’ prints \symb{\symb}.
+
+Please note that the grouping characters \code{\{} and \code{\}} have
+to be nested properly in \meta{name} and that multiple consecutive
+space characters are collapsed into a single space character.
+Additionally, all leading and trailing space characters are ignored.
+\end{definition}
+
+\texindex{verb}
+Contrary to the standard \LaTeX{} \symb{\verb} command, the
+\symb{\code} and \symb{\symb} command can be used inside an
+argument of a \TeX{} control sequence.  In a list environment,
+for example, ‘\code{\\item[\\symb\{name\}]}’ works as expected.
+
+\begin{definition}
+\texindex{codeitem}
+\texanchor{codeitem}
+\deftex{\codeitem} \meta{text}
+The \symb{\codeitem} command is syntactic sugar for
+‘\code{\\item[\\code\{\meta{text}\}]}’.
+\end{definition}
+
+\begin{definition}
+\texindex{symbitem}
+\texanchor{symbitem}
+\deftex{\symbitem} \meta{name}
+The \symb{\symbitem} command is syntactic sugar for
+‘\code{\\item[\\symb\{\meta{name}\}]}’.
+\end{definition}
+
+\index{meta-syntactic variable}
+\index{variable!meta-syntactic}
+Sooner or later you want to use placeholders inside of code snippets.
+The following commands print such meta-syntactic variables.
+
+% var
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{var}
+\texanchor{var}
+\deftex{\var} \meta{name}
+\index{meta-syntactic variable}
+\index{variable!meta-syntactic}
+Print \meta{name} as a meta-syntactic variable.  The formatting of the
+\symb{\var} macro adopts the style of variables in mathematics.  For
+example, ‘\code{\\var\{name\}}’ prints \var{name}.
+\end{definition}
+
+% meta
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{meta}
+\texanchor{meta}
+\deftex{\meta} \meta{name}
+\index{meta-syntactic variable}
+\index{variable!meta-syntactic}
+\index{non-terminal symbol}
+\index{symbol!non-terminal}
+Print \meta{name} as a meta-syntactic variable delimited by angle
+brackets.  The formatting of the \symb{\meta} macro adopts the style
+of a non-terminal symbol in Backus–Naur form notation.  For example,
+‘\code{\\meta\{name\}}’ prints \meta{name}.
+\end{definition}
+
+\index{occurrence}
+\index{repetition}
+Operators are frequently used to describe repeating syntactic
+elements.  The Kleene star is quite commonly used to denote zero
+or more occurrences.  Likewise the Kleene plus for one or more
+occurrences.  In regular expressions the question mark denotes
+an optional pattern, i.e. zero or one occurrence.
+
+% kleene
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{kleene}
+\texanchor{kleene}
+\deftex{\kleene} \meta{symbol}
+\index{Kleene operator}
+Produce a Kleene operator for marking repetitive elements of a
+grammar; \code{\\kleene*} and \code{\\kleene+} produce the Kleene
+star and Kleene plus unary operator respectively.  For example,
+‘\code{\\meta\{expr\}\\kleene*}’ prints \meta{expr}\kleene*, which
+means zero or more occurrences of \meta{expr}.
+\end{definition}
+
+% metasyntax
+% ----------------------------------------------------------------------
+\begin{definition}
+\envindex{metasyntax}
+\envanchor{metasyntax}
+\defenv{metasyntax}
+\index{syntax}
+\index{grammar}
+An environment to describe the syntax of a language, for example, a
+computer programming language, an application programming interface, a
+file or document format, or a communication protocol.
+
+Regular text is printed as in the \symb{\code} command and such texts
+denote terminals.  Non-terminals should be formatted with the
+\symb{\meta} command.  A set of meta-symbol commands is available
+inside the body of the \symb{metasyntax} environment denoting syntax
+contructs.
+\begin{description}
+\item[\code{\\=}]
+\symindex{\=}
+\index{syntax!production}
+Production or definition.
+\begin{multicols}{2}
+\begin{verbatim}
+\meta{foo}\=\meta{bar}
+\end{verbatim}
+\columnbreak
+\begin{metasyntax}
+\meta{foo}\=\meta{bar}
+\end{metasyntax}
+\end{multicols}
+
+\item[\code{\\,}]
+\symindex{\,}
+\index{syntax!sequence}
+Sequence or concatenation.
+\begin{multicols}{2}
+\begin{verbatim}
+\meta{foo}\,\meta{bar}
+\end{verbatim}
+\columnbreak
+\begin{metasyntax}
+\meta{foo}\,\meta{bar}
+\end{metasyntax}
+\end{multicols}
+
+\item[\code{\\|}]
+\symindex{\|}
+\index{syntax!alternative}
+Alternative or choice.
+\begin{multicols}{2}
+\begin{verbatim}
+\meta{foo}\|\meta{bar}
+\end{verbatim}
+\columnbreak
+\begin{metasyntax}
+\meta{foo}\|\meta{bar}
+\end{metasyntax}
+\end{multicols}
+
+\item[\code{\\*}]
+\symindex{\*}
+\index{syntax!repetition}
+\index{Kleene star operator}
+\index{operator!Kleene star}
+Repetition, zero or more times (Kleene star).
+\begin{multicols}{2}
+\begin{verbatim}
+\meta{foo}\*
+\end{verbatim}
+\columnbreak
+\begin{metasyntax}
+\meta{foo}\*
+\end{metasyntax}
+\end{multicols}
+
+\item[\code{\\+}]
+\symindex{\+}
+\index{syntax!repetition}
+\index{Kleene plus operator}
+\index{operator!Kleene plus}
+Repetition, one or more times (Kleene plus).
+\begin{multicols}{2}
+\begin{verbatim}
+\meta{foo}\+
+\end{verbatim}
+\columnbreak
+\begin{metasyntax}
+\meta{foo}\+
+\end{metasyntax}
+\end{multicols}
+
+\item[\code{\\?}]
+\symindex{\?}
+\index{syntax!optional}
+Optional phrase.
+\begin{multicols}{2}
+\begin{verbatim}
+\meta{foo}\?
+\end{verbatim}
+\columnbreak
+\begin{metasyntax}
+\meta{foo}\?
+\end{metasyntax}
+\end{multicols}
+
+\item[\code{\\(...\\)} or \code{\\group\{...\}}]
+\texindex{group}
+\index{syntax!group}
+Grouping.
+\begin{multicols}{2}
+\begin{verbatim}
+\(foo\|bar\)
+\group{foo\|bar}
+\end{verbatim}
+\columnbreak
+\begin{metasyntax}
+\(foo\|bar\)
+\group{foo\|bar}
+\end{metasyntax}
+\end{multicols}
+
+\item[\code{\\start}]
+\texindex{start}
+\index{syntax!start rule}
+Mark the start rule.
+\begin{multicols}{2}
+\begin{verbatim}
+\start\meta{foo}
+\end{verbatim}
+\columnbreak
+\begin{metasyntax}
+\start\meta{foo}
+\end{metasyntax}
+\end{multicols}
+
+\item[\code{\\default}]
+\texindex{default}
+\index{syntax!default value}
+Mark the default value.
+\begin{multicols}{2}
+\begin{verbatim}
+\default{42}
+\end{verbatim}
+\columnbreak
+\begin{metasyntax}
+\default{42}
+\end{metasyntax}
+\end{multicols}
+
+\item[\code{\\\&}]
+\symindex{\&}
+Continuation, add it at the beginning of a line.
+\begin{multicols}{2}
+\begin{verbatim}
+\meta{list}\=\meta{item}
+\&\|\meta{item}\,\meta{list}
+\end{verbatim}
+\columnbreak
+\begin{metasyntax}
+\meta{list}\=\meta{item}
+\&\|\meta{item}\,\meta{list}
+\end{metasyntax}
+\end{multicols}
+Each \symb{\&} increases the indentation by one unit.
+
+\item[\code{\\\\}, \code{\\\ }, \code{\\dots}]
+\index{backslash}
+\symindex{\\}
+\index{visible space}
+\texindexvisiblespace
+\index{ellipses}
+\texindex{dots}
+Backslash, visible space, and ellipses.
+\begin{multicols}{2}
+\begin{metasyntax}
+\\\\
+\\\ {}
+\\dots
+\end{metasyntax}
+\columnbreak
+\begin{metasyntax}
+\\
+\ {}
+\dots
+\end{metasyntax}
+\end{multicols}
+\end{description}
+\end{definition}
+
+
+\subsection{Documenting Definitions}
+
+\styindex{rsdefinition}
+\index{documentation}
+The \code{rsdefinition} package provides macros to describe functions,
+variables, data types, and similar entities in a consistent style.
+The interface is modeled after the respective Texinfo functionality.
+
+For example,
+\begin{display}
+\begin{verbatim}
+\begin{definition}
+\defun{forward-line} &optional \var{n}
+Move \var{n} lines forward (backward if \var{n} is negative).
+\end{definition}
+\end{verbatim}
+\end{display}
+is printed as
+\begin{display}
+\begin{definition}
+\defun{forward-line} &optional \var{n}
+Move \var{n} lines forward (backward if \var{n} is negative).
+\end{definition}
+\end{display}
+
+Start the definition with a \symb{\def}\ldots{} command to insert
+the signature of the entity.  The body of the definition, i.e. the
+documentation, follows on succeeding lines.
+
+The signature line is printed in the \texref{definitionfont} font.
+The name of the entity is formatted using the \texref{symb} command.
+If the entity has parameters, the entire parameter list is either a
+balanced group or the rest of the line.
+
+The parameter list has several features to format Lisp lambda lists
+nicely.  Parentheses, \code( and \code), are active and print itself
+with a slightly larger spacing to improve readability.  The ampersand
+\code\& is also active.  It reads either a balanced group or
+everything up to the next space, and prints the entire word (including
+the ampersand) as a lambda list keyword using the
+\texref{lambdalistkeyword} command.
+
+Each definition is assigned to a category.  The name of the category is
+displayed at the right-hand margin of the signature line.
+
+You can insert multiple signatures if you want to document the
+entities together.  For example,
+\begin{display}
+\begin{verbatim}
+\begin{definition}
+\defun[double]{sin}(double \var{x})
+\defun[double]{cos}(double \var{x})
+Return the sine or cosine of \var{x} respectively.
+\end{definition}
+\end{verbatim}
+\end{display}
+is printed as
+\begin{display}
+\begin{definition}
+\defun[double]{sin}(double \var{x})
+\defun[double]{cos}(double \var{x})
+Return the sine or cosine of \var{x} respectively.
+\end{definition}
+\end{display}
+
+There are three universal \symb{\def}\ldots{} commands with an
+explicit category name and several specific commands with an implicit
+category name.  See table~\ref{tab:def} on page~\pageref{tab:def}, for
+a list of all these commands.
+
+\begin{table}
+\begin{tabular}{l l c c}
+\hline
+\bf Command &\bf Category &\bf Arguments &\bf Typed \\
+\hline
+\symb{\deffn} & \textit{explicit} & \checkmark & \checkmark \\
+\symb{\defun} & \defunname & \checkmark & \checkmark \\
+\symb{\defmacro} & \defmacroname & \checkmark & \checkmark \\
+\symb{\defgeneric} & \defgenericname & \checkmark & \checkmark \\
+\symb{\defmethod} & \defmethodname  & \checkmark & \checkmark \\
+\symb{\defspec} & \defspecname  & \checkmark & \checkmark \\
+\symb{\defcom} & \defcomname & \checkmark & \checkmark \\
+\hline
+\symb{\defvr} & \textit{explicit} & & \checkmark \\
+\symb{\defvar} & \defvarname & & \checkmark \\
+\symb{\defparam} & \defparamname & & \checkmark \\
+\symb{\defconst} & \defconstname & & \checkmark \\
+\symb{\defopt} & \defoptname & & \checkmark \\
+\hline
+\symb{\deftp} & \textit{explicit} & & \\
+\symb{\deftype} & \deftypename & & \\
+\symb{\defstruct} & \defstructname & & \\
+\symb{\defclass} & \defclassname & & \\
+\symb{\defcondition} & \defconditionname & & \\
+\hline
+\symb{\deftex} & \deftexname & \checkmark & \\
+\symb{\defenv} & \defenvname & \checkmark & \\
+\symb{\defcount} & \defcountname & & \\
+\symb{\defdimen} & \defdimenname & & \\
+\symb{\defskip} & \defskipname & & \\
+\symb{\defmuskip} & \defmuskipname & & \\
+\symb{\defbox} & \defboxname & & \\
+\symb{\deftoks} & \deftoksname & & \\
+\symb{\defif} & \defifname & & \\
+\hline
+\end{tabular}
+\captionof{table}{Definition Commands}
+\label{tab:def}
+\end{table}
+
+
+\subsubsection{Definition Environment}
+
+% definition
+% ----------------------------------------------------------------------
+\begin{definition}
+\envindex{definition}
+\envanchor{definition}
+\defenv{definition}
+An environment for documenting commands and application programming
+interfaces.  Inside a definition environment, use the \symb{\deffn},
+\symb{\defvr}, or \symb{\deftp} command to insert the signature of
+a function, variable, or data type like entity respectively.  The
+documentation of the entity is added below the signature line.
+\end{definition}
+
+\begin{definition}
+\texindex{definitionfont}
+\texanchor{definitionfont}
+\deftex{\definitionfont}
+The main font for the signature line of a definition.
+
+Default is ‘\code{\\normalfont\\slshape}’.  If the definition
+takes arguments, mark the parameters with either \texref{var}
+or \texref{meta} so that the documentation can refer them.
+\end{definition}
+
+\begin{definition}
+\texindex{definitioncategoryfont}
+\texanchor{definitioncategoryfont}
+\deftex{\definitioncategoryfont}
+The font for the category of a definition.
+
+Default is ‘\code{\\normalfont\\bfseries\\small}’.  If the document
+class is a \KOMAScript{} class, \symb{\definitioncategoryfont} uses
+the respective \code{disposition} font.
+\end{definition}
+
+\begin{definition}
+\texindex{lambdalistkeyword}
+\texanchor{lambdalistkeyword}
+\deftex{\lambdalistkeyword} \meta{word}
+Format \meta{word} as a lambda list keyword.  For example,
+‘\code{\\lambdalistkeyword\{\\\&rest\}}’ is printed as
+\lambdalistkeyword{\&rest}.
+\end{definition}
+
+\begin{definition}
+\texindex{lambdalistkeywordfont}
+\texanchor{lambdalistkeywordfont}
+\deftex{\lambdalistkeywordfont}
+The font for a lambda list keyword.
+
+Default is ‘\code{\\normalfont\\small}’.
+\end{definition}
+
+
+\subsubsection{Functions and Similar Entities}
+
+\index{function definition}
+\index{definition!function}
+This section describes the commands for documenting functions and
+similar entities.
+
+% deffn
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{deffn}
+\texanchor{deffn}
+\deftex{\deffn} \meta{category} \code{*}\kleene? \meta{data-type}\kleene? \meta{symbol-name} \meta{lambda-list}
+The \symb{\deffn} command is the general definition command for
+functions or similar entities that may take arguments.
+\begin{itemize}
+\item First argument \meta{category} is the category name, for
+example, “Function” if the entity is a function.
+\item Optional second argument \meta{data-type} is the data type of
+the return value of the function.
+\item Third argument \meta{symbol-name} is the name of the function.
+\item Fourth argument \meta{lambda-list} are the parameters of the
+function.  The \meta{lambda-list} argument is either a balanced group
+(in which case it can span multiple lines) or the rest of the line.
+\end{itemize}
+If the star variant is specified, \meta{data-type} is printed on a
+line by itself.  Otherwise, the data type is put on the same line as
+the function name and the arguments.
+\end{definition}
+
+% defun
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defun}
+\texanchor{defun}
+\texindex{defunname}
+\texanchor{defunname}
+\deftex{\defun} \code{*}\kleene? \meta{data-type}\kleene? \meta{symbol-name} \meta{lambda-list}
+The \symb{\defun} command is like the \texref{deffn} command with the
+implicit category name “\defunname”.  The actual category name is
+provided by the \symb{\defunname} command.
+\end{definition}
+
+% defmacro
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defmacro}
+\texanchor{defmacro}
+\texindex{defmacroname}
+\texanchor{defmacroname}
+\deftex{\defmacro} \code{*}\kleene? \meta{data-type}\kleene? \meta{symbol-name} \meta{lambda-list}
+The \symb{\defmacro} command is like the \texref{deffn} command with
+the implicit category name “\defmacroname”.  The actual category name
+is provided by the \symb{\defmacroname} command.
+\end{definition}
+
+% defgeneric
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defgeneric}
+\texanchor{defgeneric}
+\texindex{defgenericname}
+\texanchor{defgenericname}
+\deftex{\defgeneric} \code{*}\kleene? \meta{data-type}\kleene? \meta{symbol-name} \meta{lambda-list}
+The \symb{\defgeneric} command is like the \texref{deffn} command with
+the implicit category name “\defgenericname”.  The actual category
+name is provided by the \symb{\defgenericname} command.
+
+Generic functions are CLOS\footnote{Common Lisp Object System}
+entities describing a collection of methods with the same symbol
+name and a similar argument list structure.  Other object-oriented
+programming languages name this concept abstract method or interface.
+To use another term, say, for example,
+\begin{display}
+\begin{verbatim}
+\renewcommand\defgenericname{Abstract Method}
+\end{verbatim}
+\end{display}
+at the beginning of your document.
+\end{definition}
+
+% defmethod
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defmethod}
+\texanchor{defmethod}
+\texindex{defmethodname}
+\texanchor{defmethodname}
+\deftex{\defmethod} \code{*}\kleene? \meta{data-type}\kleene? \meta{symbol-name} \meta{lambda-list}
+The \symb{\defmethod} command is like the \texref{deffn} command with
+the implicit category name “Method”.  The actual category name is
+provided by the \symb{\defmethodname} command.
+\end{definition}
+
+% defspec
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defspec}
+\texanchor{defspec}
+\texindex{defspecname}
+\texanchor{defspecname}
+\deftex{\defspec} \code{*}\kleene? \meta{data-type}\kleene? \meta{symbol-name} \meta{lambda-list}
+The \symb{\defspec} command is like the \texref{deffn} command with
+the implicit category name “\defspecname”.  The actual category name
+is provided by the \symb{\defspecname} command.
+
+A special form is a primitive Lisp expression that looks like a
+function call, but is treated specially by the Lisp system.
+\end{definition}
+
+% defcom
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defcom}
+\texanchor{defcom}
+\texindex{defcomname}
+\texanchor{defcomname}
+\deftex{\defcom} \code{*}\kleene? \meta{data-type}\kleene? \meta{symbol-name} \meta{lambda-list}
+The \symb{\defcom} command is like the \texref{deffn} command with the
+implicit category name “\defcomname”.  The actual category name is
+provided by the \symb{\defcomname} command.
+\end{definition}
+
+
+\subsubsection{Variables and Similar Entities}
+
+\index{variable definition}
+\index{definition!variable}
+This section describes the commands for documenting variables and
+similar entities.
+
+% defvr
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defvr}
+\texanchor{defvr}
+\deftex{\defvr} \meta{category} \code{*}\kleene? \meta{data-type}\kleene? \meta{symbol-name}
+The \symb{\defvr} command is the general definition command for
+variables or similar entities.
+\begin{itemize}
+\item First argument \meta{category} is the category name, for
+example, “Variable” if the entity is a variable.
+\item Optional second argument \meta{data-type} is the data type of
+the variable.
+\item Third argument \meta{symbol-name} is the name of the variable.
+\end{itemize}
+If the star variant is specified, \meta{data-type} is printed on a
+line by itself.  Otherwise, the data type is put on the same line as
+the variable name.
+\end{definition}
+
+For example,
+\begin{display}
+\begin{verbatim}
+\begin{definition}
+\defvr{Variable}*[char *]{program_invocation_name}
+This variable’s value is the name that was used to invoke
+the program running in the current process.
+\end{definition}
+\end{verbatim}
+\end{display}
+is printed as
+\begin{display}
+\begin{definition}
+\defvr{Variable}*[char *]{program_invocation_name}
+This variable’s value is the name that was used to invoke
+the program running in the current process.
+\end{definition}
+\end{display}
+
+There are specialized commands for common category names.
+
+% defvar
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defvar}
+\texanchor{defvar}
+\texindex{defvarname}
+\texanchor{defvarname}
+\deftex{\defvar} \code{*}\kleene? \meta{data-type}\kleene? \meta{symbol-name}
+The \symb{\defvar} command is like the \texref{defvr} command with the
+implicit category name “\defvarname”.  The actual category name is
+provided by the \symb{\defvarname} command.
+\end{definition}
+
+% defparam
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defparam}
+\texanchor{defparam}
+\texindex{defparamname}
+\texanchor{defparamname}
+\deftex{\defparam} \code{*}\kleene? \meta{data-type}\kleene? \meta{symbol-name}
+The \symb{\defparam} command is like the \texref{defvr} command with
+the implicit category name “\defparamname”.  The actual category name
+is provided by the \symb{\defparamname} command.
+\end{definition}
+
+% defconst
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defconst}
+\texanchor{defconst}
+\texindex{defconstname}
+\texanchor{defconstname}
+\deftex{\defconst} \code{*}\kleene? \meta{data-type}\kleene? \meta{symbol-name}
+The \symb{\defconst} command is like the \texref{defvr} command with
+the implicit category name “\defconstname”.  The actual category name
+is provided by the \symb{\defconstname} command.
+\end{definition}
+
+% defopt
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defopt}
+\texanchor{defopt}
+\texindex{defoptname}
+\texanchor{defoptname}
+\deftex{\defopt} \code{*}\kleene? \meta{data-type}\kleene? \meta{symbol-name}
+The \symb{\defopt} command is like the \texref{defvr} command with the
+implicit category name “\defoptname”.  The actual category name is
+provided by the \symb{\defoptname} command.
+\end{definition}
+
+
+\subsubsection{Data Types and Similar Entities}
+
+\index{data type definition}
+\index{definition!data type}
+This section describes the commands for documenting data types and
+similar entities.
+
+% deftp
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{deftp}
+\texanchor{deftp}
+\deftex{\deftp} \meta{category} \meta{symbol-name}
+The \symb{\deftp} command is the general definition command for data
+types or similar entities.
+\begin{itemize}
+\item First argument \meta{category} is the category name, for
+example, “Data Type” if the entity is a data type.
+\item Second argument \meta{symbol-name} is the name of the data type.
+\end{itemize}
+\end{definition}
+
+% deftype
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{deftype}
+\texanchor{deftype}
+\texindex{deftypename}
+\texanchor{deftypename}
+\deftex{\deftype} \meta{symbol-name}
+The \symb{\deftype} command is like the \texref{deftp} command with
+the implicit category name “\deftypename”.  The actual category name
+is provided by the \symb{\deftypename} command.
+\end{definition}
+
+% defstruct
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defstruct}
+\texanchor{defstruct}
+\texindex{defstructname}
+\texanchor{defstructname}
+\deftex{\defstruct} \meta{symbol-name}
+The \symb{\defstruct} command is like the \texref{deftp} command with
+the implicit category name “\defstructname”.  The actual category name
+is provided by the \symb{\defstructname} command.
+\end{definition}
+
+% defclass
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defclass}
+\texanchor{defclass}
+\texindex{defclassname}
+\texanchor{defclassname}
+\deftex{\defclass} \meta{symbol-name}
+The \symb{\defclass} command is like the \texref{deftp} command with
+the implicit category name “\defclassname”.  The actual category name
+is provided by the \symb{\defclassname} command.
+\end{definition}
+
+% defcondition
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defcondition}
+\texanchor{defcondition}
+\texindex{defconditionname}
+\texanchor{defconditionname}
+\deftex{\defcondition} \meta{symbol-name}
+The \symb{\defcondition} command is like the \texref{deftp} command
+with the implicit category name “\defconditionname”.  The actual
+category name is provided by the \symb{\defconditionname} command.
+\end{definition}
+
+\index{exception}
+If your programming language only provides exceptions, say, for
+example,
+\begin{display}
+\begin{verbatim}
+\renewcommand\defconditionname{Exception}
+\end{verbatim}
+\end{display}
+at the beginning of your document.
+
+
+\subsubsection{\TeX{} and \LaTeX{} Entities}
+
+There are specialized commands for documenting \TeX{} and \LaTeX{}
+entities.
+
+% deftex
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{deftex}
+\texanchor{deftex}
+\texindex{deftexname}
+\texanchor{deftexname}
+\deftex{\deftex} \meta{symbol-name} \meta{lambda-list}
+The \symb{\deftex} command is like the \texref{deffn} command with the
+implicit category name “\deftexname”.  The actual category name is
+provided by the \symb{\deftexname} command.
+\end{definition}
+
+% defenv
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defenv}
+\texanchor{defenv}
+\texindex{defenvname}
+\texanchor{defenvname}
+\deftex{\defenv} \meta{symbol-name} \meta{lambda-list}
+The \symb{\defenv} command is like the \texref{deffn} command with the
+implicit category name “\defenvname”.  The actual category name is
+provided by the \symb{\defenvname} command.
+\end{definition}
+
+% defcount
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defcount}
+\texanchor{defcount}
+\texindex{defcountname}
+\texanchor{defcountname}
+\deftex{\defcount} \meta{symbol-name}
+The \symb{\defcount} command is like the \texref{defvr} command with
+the implicit category name “\defcountname”.  The actual category name
+is provided by the \symb{\defcountname} command.
+\end{definition}
+
+% defdimen
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defdimen}
+\texanchor{defdimen}
+\texindex{defdimenname}
+\texanchor{defdimenname}
+\deftex{\defdimen} \meta{symbol-name}
+The \symb{\defdimen} command is like the \texref{defvr} command with
+the implicit category name “\defdimenname”.  The actual category name
+is provided by the \symb{\defdimenname} command.
+\end{definition}
+
+% defskip
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defskip}
+\texanchor{defskip}
+\texindex{defskipname}
+\texanchor{defskipname}
+\deftex{\defskip} \meta{symbol-name}
+The \symb{\defskip} command is like the \texref{defvr} command with
+the implicit category name “\defskipname”.  The actual category name
+is provided by the \symb{\defskipname} command.
+\end{definition}
+
+% defmuskip
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defmuskip}
+\texanchor{defmuskip}
+\texindex{defmuskipname}
+\texanchor{defmuskipname}
+\deftex{\defmuskip} \meta{symbol-name}
+The \symb{\defmuskip} command is like the \texref{defvr} command with
+the implicit category name “\defmuskipname”.  The actual category name
+is provided by the \symb{\defmuskipname} command.
+\end{definition}
+
+% defbox
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defbox}
+\texanchor{defbox}
+\texindex{defboxname}
+\texanchor{defboxname}
+\deftex{\defbox} \meta{symbol-name}
+The \symb{\defbox} command is like the \texref{defvr} command with the
+implicit category name “\defboxname”.  The actual category name is
+provided by the \symb{\defboxname} command.
+\end{definition}
+
+% deftoks
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{deftoks}
+\texanchor{deftoks}
+\texindex{deftoksname}
+\texanchor{deftoksname}
+\deftex{\deftoks} \meta{symbol-name}
+The \symb{\deftoks} command is like the \texref{defvr} command with
+the implicit category name “\deftoksname”.  The actual category name
+is provided by the \symb{\deftoksname} command.
+\end{definition}
+
+% defif
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{defif}
+\texanchor{defif}
+\texindex{defifname}
+\texanchor{defifname}
+\deftex{\defif} \meta{symbol-name}
+The \symb{\defif} command is like the \texref{defvr} command with the
+implicit category name “\defifname”.  The actual category name is
+provided by the \symb{\defifname} command.
+\end{definition}
+
+
+\subsection{Date and Time}
+
+\index{date}
+\index{time}
+\index{ISO 8601}
+\styindex{rsdatetime}
+The \code{rsdatetime} package provides macros to print the date and
+time in ISO~8601 format.  This is a lightweight solution.  If you need
+more advanced capabilities, use the
+\href{https://mirrors.ctan.org/macros/latex/contrib/datetime2/datetime2.pdf}{\code{datetime2}}
+package.
+
+% isodate
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{isodate}
+\texanchor{isodate}
+\deftex{\isodate} \code{*}\kleene? \meta{precision}\kleene?
+Insert the current date in extended ISO 8601 format.
+\begin{itemize}
+\item Optional argument \meta{precision} specifies the precision.
+Value is either \code{year}, \code{month}, \code{day}, \code{hour},
+\code{minute}, or \code{second}.  Default is \code{day}.  If the
+precision is a time of day unit, the time is separated from the date
+by a ‘T’ character.
+\end{itemize}
+If the star indicator is present, utilize the basic format.
+\end{definition}
+
+% isotime
+% ----------------------------------------------------------------------
+\begin{definition}
+\texindex{isotime}
+\texanchor{isotime}
+\deftex{\isotime} \code{*}\kleene? \meta{precision}\kleene?
+Insert the current time in extended ISO 8601 format.
+\begin{itemize}
+\item Optional argument \meta{precision} specifies the precision.
+Value is either \code{hour}, \code{minute}, or \code{second}.  Default
+is \code{minute}.
+\end{itemize}
+If the star indicator is present, utilize the basic format.
+\end{definition}
+
+Whether or not a second precision is actually supported depends on the
+underlying \TeX{} engine.  If not, the second of the minute defaults
+to zero.
+
+Table~\ref{tab:date} on page~\pageref{tab:date} lists the date and
+time formats produced by the \texref{isodate} and \texref{isotime}
+commands.
+
+\begingroup
+% Example from the ISO 8601 standard: 1985-04-12T10:15:30
+\year=1985\month=4\day=12\time=615
+\begin{display}*
+\begin{tabular}{l l l l}
+\hline
+\multicolumn{2}{c}{Extended Format} &
+\multicolumn{2}{c}{Basic Format} \\
+\hline
+\hfil Command  & \hfil Result &
+\hfil Command  & \hfil Result \\
+\hline
+\code{\\isodate}          & \isodate          &
+\code{\\isodate*}         & \isodate*         \\
+\code{\\isodate[year]}    & \isodate[year]    &
+\code{\\isodate*[year]}   & \isodate*[year]   \\
+\code{\\isodate[month]}   & \isodate[month]   &
+\code{\\isodate*[month]}  & \isodate*[month]  \\
+\code{\\isodate[day]}     & \isodate[day]     &
+\code{\\isodate*[day]}    & \isodate*[day]    \\
+\code{\\isodate[hour]}    & \isodate[hour]    &
+\code{\\isodate*[hour]}   & \isodate*[hour]   \\
+\code{\\isodate[minute]}  & \isodate[minute]  &
+\code{\\isodate*[minute]} & \isodate*[minute] \\
+\hline
+\code{\\isotime}          & \isotime          &
+\code{\\isotime*}         & \isotime*         \\
+\code{\\isotime[hour]}    & \isotime[hour]    &
+\code{\\isotime*[hour]}   & \isotime*[hour]   \\
+\code{\\isotime[minute]}  & \isotime[minute]  &
+\code{\\isotime*[minute]} & \isotime*[minute] \\
+\hline
+\end{tabular}
+\captionof{table}{Date and Time Formats}
+\label{tab:date}
+\end{display}
+\endgroup
+
+
+\clearpage
+\section{Index}
+
+\subsection*{Concept Index}
+\printindex
+
+\subsection*{Index of \LaTeX{} Macros}
+\printindex[sym]
+\end{document}
+
+%% rsuserguide.tex ends here
