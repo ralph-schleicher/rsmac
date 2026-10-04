@@ -52,6 +52,8 @@ LATEX_FLAGS = -interaction=nonstopmode -file-line-error -shell-escape
 
 rsmacdir = $(texmfdir)/tex/latex/rsmac
 rsmac_DATA = \
+rspackages.sty \
+rspackages.ist \
 rsdisplay.sty \
 rsmetasyntax.sty \
 rsdefinition.sty \
