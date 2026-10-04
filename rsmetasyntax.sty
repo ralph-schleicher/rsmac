@@ -110,7 +110,7 @@
 % Say, e.g. ‘\meta{expr}\kleene*’ for zero or more occurrences
 % of ‘\meta{expr}’.
 \NewDocumentCommand\kleene{m}{%
-  ${}^{#1}$}
+  \@inmatherr\kleene${}^{#1}$}
 
 % metasyntax
 %
