@@ -77,6 +77,9 @@
 \RequirePackage{graphicx}
 \RequirePackage{pdflscape}
 
+% Multiple indices.
+\usepackage[protected,useindex]{splitidx}
+
 % The ‘hyperref’ package should be loaded after all other
 % packages.  Use coloured links instead of frames but keep
 % the colour of the text.
@@ -169,60 +172,77 @@
 
 \makeindex
 
-\ProvideDocumentCommand\printindex{}{%
-  \IfFileExists{\jobname.ind}{%
-    \input\jobname.ind }{}}
+\DeclareDocumentCommand\printindex{o}{%
+  \IfNoValueTF{#1}{%
+    % Optional argument is omitted.
+    \InputIfFileExists{\jobname-idx.ind}{}{%
+      \InputIfFileExists{\jobname.ind}{}{}}}{%
+    \InputIfFileExists{\jobname-#1.ind}{}{}}}
 
 % Group headers.
 \NewDocumentCommand\indexsymbolsname{}{Symbols}
 \NewDocumentCommand\indexnumbersname{}{Numbers}
 
-\def\indexsymhead{\indexsymbolsname}
-\def\indexnumhead{\indexnumbersname}
+% Material to be inserted between groups.
+\ProvideDocumentCommand\indexspace{}{}
 
-% No extra vertical space between groups.
-\let\indexspace\relax
-% No group headers.
+% Handling of group headers.
+\NewDocumentCommand\indexgroup{m}{}
+
+% No group headers, only extra vertical space between groups.
+\let\indexspace\medskip
 \let\indexgroup\@gobble
-
-\ifcase 2
-\or %1
-  % Print group headers.
-  \let\indexspace\relax
-  \let\indexgroup\minisec
-\or %2
-  % No group headers, only extra vertical space between groups.
-  \let\indexspace\medskip
-  \let\indexgroup\@gobble
-\fi
 
 % Like ‘\enspace’ but separate the page number more clearly.
 % Much better if the index entry contains spaces, too.
-\def\indexpagesep{\kern 1em }
+\NewDocumentCommand\indexpagesep{}{%
+  \kern 1em }
 
-\def\indexitem{\par\hangindent 1.5\rs@indent\relax}
-\def\indexsubitem{\par\hangindent 2.0\rs@indent\hskip 0.5\rs@indent\relax}
-\def\indexsubsubitem{\par\hangindent 2.5\rs@indent\hskip 1.0\rs@indent\relax}
+\NewDocumentCommand\indexitem{}{%
+  \par\hangindent 1.5\rs@indent\relax}
+\NewDocumentCommand\indexsubitem{}{%
+  \par\hangindent 2.0\rs@indent\hskip 0.5\rs@indent\relax}
+\NewDocumentCommand\indexsubsubitem{}{%
+  \par\hangindent 2.5\rs@indent\hskip 1.0\rs@indent\relax}
 
-\RenewDocumentEnvironment{theindex}{}{%
-  \expandafter\ifx\csname addchap\endcsname\relax
-    \expandafter\ifx\csname chapter\endcsname\relax
-      \section\indexname
-    \else
-      \chapter\indexname
-     \fi
+% Process an index option.
+\def\rs@indexspec#1{%
+  \def\@tempa{#1}%
+  \def\@tempb{headers}%
+  \ifx\@tempa\@tempb
+    % Print group headers.
+    \let\indexspace\relax
+    \let\indexgroup\minisec
   \else
-    \addchap\indexname
-  \fi
-  % The ‘multicols*’ environment does not balance
-  % the columns on the last page.
-  \begin{multicols*}{2}
+    \def\@tempb{nogroups}%
+    \ifx\@tempa\@tempb
+      % No grouping.
+      \let\indexspace\relax
+      \let\indexgroup\@gobble
+    \else
+      \def\@tempb{comma}%
+      \ifx\@tempa\@tempb
+        \def\indexpagesep{, }
+      \else
+        \relax
+      \fi
+    \fi
+  \fi}
+
+\NewDocumentCommand\indexsetup{>{\SplitList{,}}o}{%
+  \ProcessList{#1}\rs@indexspec
   \let\item\indexitem
   \let\subitem\indexsubitem
   \let\subsubitem\indexsubsubitem
   \parskip 0pt plus 0.75pt\relax
-  \raggedright}{%
-  \end{multicols*}}
+  \raggedright}
+
+\RenewDocumentEnvironment{theindex}{}{%
+  % The ‘multicols*’ environment does not balance
+  % the columns on the last page.
+  \begin{multicols}{2}
+  \indexsetup}{%
+  \end{multicols}}
 
 %% =====================================
 %% Lists
