@@ -53,12 +53,14 @@ LATEX_FLAGS = -interaction=nonstopmode -file-line-error -shell-escape
 rsmacdir = $(texmfdir)/tex/latex/rsmac
 rsmac_DATA = \
 rspackages.sty \
-rspackages.ist \
 rsdisplay.sty \
 rsmetasyntax.sty \
 rsdefinition.sty \
 rsdatetime.sty \
 rsmacros.sty
+makeindexdir = $(texmfdir)/makeindex/rsmac
+makeindex_DATA = \
+rspackages.ist
 
 ### Rules
 
@@ -77,6 +79,11 @@ install-data: all
 	for f in $(rsmac_DATA) ; do \
 	  echo "install -c -m 644 $$f $(rsmacdir)" ; \
 	  install -c -m 644 $$f $(rsmacdir) ; \
+	done
+	mkdir -p $(makeindexdir)
+	for f in $(makeindex_DATA) ; do \
+	  echo "install -c -m 644 $$f $(makeindexdir)" ; \
+	  install -c -m 644 $$f $(makeindexdir) ; \
 	done
 	texhash $(texmfdir)
 
