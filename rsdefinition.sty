@@ -34,7 +34,7 @@
 %% Code:
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{rsdefinition}[2026/10/04]
+\ProvidesPackage{rsdefinition}[2026/10/07]
 \RequirePackage{rsdisplay}
 \RequirePackage{rsmetasyntax}
 
@@ -60,8 +60,8 @@
 %
 \newif\ifrs@definition\rs@definitionfalse
 
-\NewDocumentEnvironment{definition}{O{medium}}{%
-  \display[#1]
+\NewDocumentEnvironment{definition}{}{%
+  \display[big]
   \parindent\z@
   \rs@definitiontrue}{%
   \rs@definitionfalse
