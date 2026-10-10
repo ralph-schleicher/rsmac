@@ -37,15 +37,12 @@ PACKAGE := rsmac
 VERSION := $(shell head -n1 VERSION)
 TARNAME := $(PACKAGE)-$(VERSION)
 
-ifneq ($(TEXMFHOME),)
-texmfdir = $(TEXMFHOME)
-else # not TEXMFHOME
-ifneq ($(TEXMFLOCAL),)
-texmfdir = $(TEXMFLOCAL)
-else # not TEXMFLOCAL
-texmfdir = $(HOME)/texmf
-endif # not TEXMFLOCAL
-endif # not TEXMFHOME
+shared = nil
+ifeq ($(shared),nil)
+texmfdir := $(shell kpsewhich -var-value TEXMFHOME)
+else
+texmfdir := $(shell kpsewhich -var-value TEXMFLOCAL)
+endif
 
 LATEX = pdflatex
 LATEX_FLAGS = -interaction=nonstopmode -file-line-error -shell-escape
