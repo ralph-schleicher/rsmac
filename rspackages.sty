@@ -34,7 +34,7 @@
 %% Code:
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{rspackages}[2026/10/04]
+\ProvidesPackage{rspackages}[2026/10/10]
 
 %% =====================================
 %% Packages
@@ -78,7 +78,7 @@
 \RequirePackage{pdflscape}
 
 % Multiple indices.
-\usepackage[protected,useindex]{splitidx}
+\RequirePackage[protected,useindex]{splitidx}
 
 % The ‘hyperref’ package should be loaded after all other
 % packages.  Use coloured links instead of frames but keep
@@ -88,7 +88,7 @@
   \hypersetup{%
     colorlinks=true,
     allcolors=.}
-  \let\urn\nolinkurl}
+  \NewCommandCopy\urn\nolinkurl}
 
 %% =====================================
 %% General
@@ -118,25 +118,38 @@
   \@mathmargin\rs@indent\relax}
 
 % Adjust spacing.
+%
+%                 10        11        12         ±
+% big       1     13.5      15        16.5       3
+%           2/3    9        10        11         2
+% medium    5/8    8.4375    9.375    10.312     1.875
+%           1/2    6.75      7.5       8.25      1.5
+%           1/3    4.5       5         5.5       1
+% small     1/4    3.375     3.75      4.125     0.75
+%           1/6    2.25      2.5       2.75      0.5
+%           1/8    1.6875    1.875     2.0625    0.375
+\ifcase\@ptsize
+  \bigskipamount 13.5pt plus 3pt minus 3pt
+  \medskipamount 8.4375pt plus 1.875pt minus 1.875pt
+  \smallskipamount 3.375pt plus 0.75pt minus 0.75pt
+\or %1 → 11pt
+  \bigskipamount 15pt plus 3pt minus 3pt
+  \medskipamount 9.375pt plus 1.875pt minus 1.875pt
+  \smallskipamount 3.75pt plus 0.75pt minus 0.75pt
+\or %2 → 12pt
+  \bigskipamount 16.5pt plus 3pt minus 3pt
+  \medskipamount 10.312pt plus 1.875pt minus 1.875pt
+  \smallskipamount 4.125pt plus 0.75pt minus 0.75pt
+\fi
+
 \def\rs@spacing{%
-  \ifcase\@ptsize
-    \bigskipamount 13.5pt plus 3pt minus 3pt
-    \medskipamount 6.75pt plus 1.5pt minus 1.5pt
-    \smallskipamount 3.375pt plus 0.75pt minus 0.75pt
-  \or %1 → 11pt
-    \bigskipamount 15pt plus 3pt minus 3pt
-    \medskipamount 7.5pt plus 1.5pt minus 1.5pt
-    \smallskipamount 3.75pt plus 0.75pt minus 0.75pt
-  \or %2 → 12pt
-    \bigskipamount 16.5pt plus 3pt minus 3pt
-    \medskipamount 8.25pt plus 1.5pt minus 1.5pt
-    \smallskipamount 4.125pt plus 0.75pt minus 0.75pt
-  \fi
+  % Distance between paragraphs.
+  \parskip\smallskipamount
   % Displayed equations.
   \abovedisplayskip\bigskipamount
   \belowdisplayskip\bigskipamount
   \abovedisplayshortskip\smallskipamount
-  \belowdisplayshortskip\bigskipamount
+  \belowdisplayshortskip\medskipamount
   % Distance between the text and a ‘here’ float.
   \intextsep\bigskipamount
   % Distance between the text and a top or bottom float.
@@ -149,12 +162,6 @@
   % Distance between content and caption.
   \abovecaptionskip\medskipamount
   \belowcaptionskip\z@
-  % Distance between paragraphs.
-  \ifnum\parindent=\z@
-    \parskip\smallskipamount
-  \else
-    \parskip 0pt plus 0.75pt
-  \fi
   % Vertical space above and below a ‘multicols’ environment.
   \multicolsep\parskip
   % KOMA-Script places the footnotes at the bottom of the page.
@@ -238,8 +245,6 @@
   \raggedright}
 
 \RenewDocumentEnvironment{theindex}{}{%
-  % The ‘multicols*’ environment does not balance
-  % the columns on the last page.
   \begin{multicols}{2}
   \indexsetup}{%
   \end{multicols}}
@@ -252,7 +257,6 @@
 \partopsep\z@
 \itemsep\z@
 \parsep\parskip
-
 \leftmargin\rs@indent
 \rightmargin\rs@indent
 \listparindent\parindent
@@ -274,13 +278,12 @@
   topsep=\z@,
   partopsep=\z@,
   itemsep=\z@,
-  parsep=\the\parskip,
+  parsep=\parskip,
   leftmargin=\rs@indent,
   rightmargin=\rs@indent,
   listparindent=\parindent,
   labelsep=0.5em}
-\setlist[enumerate]{%
-}
+\setlist[enumerate]{}
 \setlist[itemize]{%
   label={--}}
 \setlist[description]{%
