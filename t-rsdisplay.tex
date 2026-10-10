@@ -51,5 +51,28 @@ The rest of it is just there to add more contents to the displayed text.
 \begin{displaymath}
         \sin^2 x + \cos^2 x = 1
 \end{displaymath}
+\verb|{display}[]| : \blindtext[1]
+\begin{display}[]
+First line.
+Second line.
+The rest of it is just there to add more contents to the displayed text.
+\end{display}
+\begingroup
+\makeatletter
+\let\rs@displayskip\smallskipamount
+\makeatother
+\verb|{display}| with \verb|\smallskipamount| : \blindtext[1]
+\begin{display}
+First line.
+Second line.
+The rest of it is just there to add more contents to the displayed text.
+\end{display}
+\verb|{display}[]| with \verb|\smallskipamount| : \blindtext[1]
+\begin{display}[]
+First line.
+Second line.
+The rest of it is just there to add more contents to the displayed text.
+\end{display}
+\endgroup
 \blindtext[1]
 \end{document}
