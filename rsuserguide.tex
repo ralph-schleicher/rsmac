@@ -120,7 +120,6 @@ of style.
 \styindex{rspackages}
 The \code{rspackages} package loads a selection of standard \LaTeX{}
 packages.  That is,
-
 \begin{description}
 \item[\href{https://mirrors.ctan.org/macros/latex/base/encguide.pdf}{\code{fontenc}}]
 \styindex{fontenc}
@@ -189,7 +188,7 @@ page.
 \texindex{verbatiminput}
 This package provides a new implementation of the \code{verbatim}
 environment.  It also defines the \symb{\verbatiminput} command to
-input a whole file verbatim
+input a whole file verbatim.
 
 \item[\href{https://mirrors.ctan.org/macros/latex/contrib/ragged2e/ragged2e.pdf}{\code{ragged2e}}]
 \styindex{ragged2e}
@@ -268,12 +267,12 @@ with the \code{protect} option to avoid premature expansion of
 This package provides extensive support for hypertext links in
 \LaTeX{}.  Links are neither framed nor coloured.
 \end{description}
-
-The \code{rspackages} package is best loaded directly after the
-document class, e.g.
+The \code{rspackages} package is best loaded after the page layout and
+document font is defined, e.g.
 \begin{display}
 \begin{verbatim}
 \documentclass{scrartcl}
+\usepackage{cmbright}
 \usepackage{rspackages}
 \end{verbatim}
 \end{display}
