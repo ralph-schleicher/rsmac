@@ -50,7 +50,8 @@ delim_0 "\\indexpagesep"
 delim_1 "\\indexpagesep"
 delim_2 "\\indexpagesep"
 
-suffix_2p "f."
-suffix_3p "ff."
+% See the ‘hyperref’ manual.
+suffix_2p "\\nohyperpage{\\,f.}"
+suffix_3p "\\nohyperpage{\\,ff.}"
 
 %% rspackages.ist ends here
