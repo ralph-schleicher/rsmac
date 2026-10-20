@@ -99,7 +99,7 @@ distclean: clean
 
 .PHONY: doc
 doc: rsuserguide.pdf
-rsuserguide.pdf: rsuserguide.tex $(rsmac_DATA)
+rsuserguide.pdf: rsuserguide.tex $(rsmac_DATA) $(makeindex_DATA)
 	$(LATEX) $(LATEX_FLAGS) rsuserguide.tex
 	splitindex -v rsuserguide.idx -- -c -s rspackages.ist
 	$(LATEX) $(LATEX_FLAGS) rsuserguide.tex
