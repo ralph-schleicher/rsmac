@@ -34,10 +34,16 @@
 %% Code:
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{rsdisplay}[2026/10/10]
+\ProvidesPackage{rsdisplay}[2026/10/22]
 
 % The display options.
 \def\rs@displayskip{\bigskipamount}
+
+\def\rs@display@big{\let\rs@displayskip\bigskipamount}
+\def\rs@display@medium{\let\rs@displayskip\medskipamount}
+\def\rs@display@small{\let\rs@displayskip\smallskipamount}
+\def\rs@display@none{\let\rs@displayskip\z@}
+\def\rs@display@par{\let\rs@displayskip\parskip}
 
 % Process a display option.
 \def\rs@displayspec#1{%
@@ -45,33 +51,13 @@
   \ifx\@tempa\@empty
     \relax
   \else
-    \def\@tempb{big}%
-    \ifx\@tempa\@tempb
-      \let\rs@displayskip\bigskipamount
+    \expandafter\let\expandafter\@tempb\csname\KV@prefix\@tempa\endcsname
+    \ifx\@tempb\relax
+      \PackageError{rsdisplay}{%
+        Unknown display option `\@tempa'}{%
+        Type  <return>  to continue}%
     \else
-      \def\@tempb{medium}%
-      \ifx\@tempa\@tempb
-        \let\rs@displayskip\medskipamount
-      \else
-        \def\@tempb{small}%
-        \ifx\@tempa\@tempb
-          \let\rs@displayskip\smallskipamount
-        \else
-          \def\@tempb{none}%
-          \ifx\@tempa\@tempb
-            \let\rs@displayskip\z@
-          \else
-            \def\@tempb{par}%
-            \ifx\@tempa\@tempb
-              \let\rs@displayskip\parskip
-            \else
-              \PackageError{rsdisplay}{%
-                Unknown display option `\@tempa'}{%
-                Type  <return>  to continue}%
-            \fi
-          \fi
-        \fi
-      \fi
+      \@tempb\relax
     \fi
   \fi}
 
@@ -87,7 +73,7 @@
 % \end{display}
 \NewDocumentEnvironment{display}{s >{\SplitList{,}}o}{%
   \IfNoValueF{#2}{%
-    \ProcessList{#2}\rs@displayspec}%
+    \def\KV@prefix{rs@display@}\ProcessList{#2}\rs@displayspec}%
   \ifvmode\else\unskip\par\fi
   \list{}{%
     \topsep\rs@displayskip
