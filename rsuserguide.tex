@@ -34,7 +34,7 @@
 %% Code:
 
 \documentclass{scrartcl}
-\usepackage[font=notomath, notomath={slantedGreek, vvarbb}, sfdefault]{rspackages}
+\usepackage{rspackages}
 \expandafter\ifx\csname checkmark\endcsname\relax
   \usepackage{amssymb} %for \checkmark
 \fi
@@ -102,7 +102,7 @@ document under the terms of the GNU Free Documentation License,
 Version 1.3 or any later version published by the Free Software
 Foundation; with no Invariant Sections, no Front-Cover Texts,
 and no Back-Cover Texts.}}
-\date{Version 1.1}
+\date{Version 1.2}
 
 \begin{document}
 \maketitle
@@ -299,22 +299,21 @@ Use the sans-serif font as the default text font.
 
 \codeitem{sfmath}
 Use the sans-serif font as the default math font.
-
 \end{description}
 
 The behaviour of the individual font packages is as follows.
-
 \begin{description}
 \item[\href{https://mirrors.ctan.org/fonts/notomath/doc/notomath-doc.pdf}{\code{notomath}}]
-This package provides Noto fonts for math mode.
+\styindex{notomath}
+\index{Noto fonts}
+This package provides Noto fonts for text mode and math mode.
 \begin{itemize}
 \item
 Load the Noto Serif font as \symb{\rmdefault} and the Noto Sans font
 as \symb{\sfdefault}.  Both fonts are scaled to \qty{90}{\%} of their
 design size.
 \item
-Load the Nimbus Mono Narrow font scaled by a factor of 1.09 as
-\symb{\ttdefault}.
+Load the Nimbus Mono Narrow font as \symb{\ttdefault}.
 \item
 If the \code{sfdefault} option is true, use Noto Sans as the default
 text font.
