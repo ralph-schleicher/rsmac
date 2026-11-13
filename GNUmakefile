@@ -108,7 +108,7 @@ rsuserguide.pdf: rsuserguide.tex $(rsmac_DATA) $(makeindex_DATA)
 
 .PHONY: package-date
 package-date:
-	@latest=`grep -F "\\ProvidesPackage" $(rsmac_DATA) | sort -t \[ -k 2 | tail -n 1 | sed -e 's/.*\[//' -e 's/\].*//'` ; \
+	@latest=`grep -F "\\ProvidesPackage" $(filter-out rspackages.sty,$(rsmac_DATA)) | sort -t \[ -k 2 | tail -n 1 | sed -e 's/.*\[//' -e 's/\].*//'` ; \
 	if grep -q -F "\\ProvidesPackage{rsmacros}[$$latest]" rsmacros.sty ; then : ; else \
 	    echo "rsmacros.sty: package date is not $$latest" >&2 ; \
 	    exit 1 ; \
