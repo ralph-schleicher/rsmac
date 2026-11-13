@@ -164,6 +164,8 @@
   \belowcaptionskip\z@
   % Vertical space above and below a ‘multicols’ environment.
   \multicolsep\parskip
+  % Horizontal space between columns.
+  \columnsep\rs@indent
   % KOMA-Script places the footnotes at the bottom of the page.
   \raggedbottom
   % Punctuation spacing is like word spacing.
@@ -258,7 +260,7 @@
 \itemsep\z@
 \parsep\parskip
 \leftmargin\rs@indent
-\rightmargin\rs@indent
+\rightmargin\z@
 \listparindent\parindent
 \labelsep 0.5em
 
@@ -280,7 +282,7 @@
   itemsep=\z@,
   parsep=\parskip,
   leftmargin=\rs@indent,
-  rightmargin=\rs@indent,
+  rightmargin=\z@,
   listparindent=\parindent,
   labelsep=0.5em}
 \setlist[enumerate]{}
