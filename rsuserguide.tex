@@ -34,9 +34,13 @@
 %% Code:
 
 \documentclass{scrartcl}
-\usepackage{rspackages}
-\usepackage{amssymb} %for \checkmark
-\usepackage{scrlogo} %for \KOMAScript
+\usepackage[font=notomath, notomath={slantedGreek, vvarbb}, sfdefault]{rspackages}
+\expandafter\ifx\csname checkmark\endcsname\relax
+  \usepackage{amssymb} %for \checkmark
+\fi
+\expandafter\ifx\csname KOMAScript\endcsname\relax
+  \usepackage{scrlogo} %for \KOMAScript
+\fi
 \usepackage{rsmacros}
 
 \makeatletter
@@ -267,15 +271,58 @@ with the \code{protect} option to avoid premature expansion of
 This package provides extensive support for hypertext links in
 \LaTeX{}.  Links are neither framed nor coloured.
 \end{description}
+
 The \code{rspackages} package is best loaded after the page layout and
 document font is defined, e.g.
 \begin{display}
 \begin{verbatim}
-\documentclass{scrartcl}
+\documentclass{article}
 \usepackage{cmbright}
 \usepackage{rspackages}
 \end{verbatim}
 \end{display}
+Some font packages require special treatment due to package
+dependencies or other constraints.  For that, the \code{rspackages}
+package provides package options to load them.
+
+
+\subsection{Package Options}
+
+The \code{rspackages} package accepts the following package options.
+\begin{description}
+\codeitem{font=\meta{name}}
+Load font package \meta{name}.  The only accepted value for
+\meta{name} is \code{notomath}.
+
+\codeitem{sfdefault}
+Use the sans-serif font as the default text font.
+
+\codeitem{sfmath}
+Use the sans-serif font as the default math font.
+
+\end{description}
+
+The behaviour of the individual font packages is as follows.
+
+\begin{description}
+\item[\href{https://mirrors.ctan.org/fonts/notomath/doc/notomath-doc.pdf}{\code{notomath}}]
+This package provides Noto fonts for math mode.
+\begin{itemize}
+\item
+Load the Noto Serif font as \symb{\rmdefault} and the Noto Sans font
+as \symb{\sfdefault}.  Both fonts are scaled to \qty{90}{\%} of their
+design size.
+\item
+Load the Nimbus Mono Narrow font scaled by a factor of 1.09 as
+\symb{\ttdefault}.
+\item
+If the \code{sfdefault} option is true, use Noto Sans as the default
+text font.
+\item
+If the \code{sfmath} option is true, use Noto Sans as the default math
+font.  Otherwise, math uses Noto Serif.
+\end{itemize}
+\end{description}
 
 
 \subsection{Layout and Formatting}
