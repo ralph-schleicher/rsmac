@@ -37,11 +37,13 @@ PACKAGE := rsmac
 VERSION := $(shell head -n1 VERSION)
 TARNAME := $(PACKAGE)-$(VERSION)
 
-shared = nil
+ifeq ($(origin texmfdir),undefined)
+shared ?= nil
 ifeq ($(shared),nil)
 texmfdir := $(shell kpsewhich -var-value TEXMFHOME)
 else
 texmfdir := $(shell kpsewhich -var-value TEXMFLOCAL)
+endif
 endif
 
 LATEX = pdflatex
