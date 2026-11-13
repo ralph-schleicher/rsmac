@@ -34,7 +34,34 @@
 %% Code:
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{rspackages}[2026/10/10]
+\ProvidesPackage{rspackages}[2026/11/13]
+
+\RequirePackage{kvoptions}
+\SetupKeyvalOptions{family=rsoptions, prefix=rs@option@}
+% The font package to load.
+\DeclareStringOption{font}
+\let\rs@option@font\relax
+\def\rs@option@font@notomath{notomath}
+% Additional package options for ‘notomath’.
+\DeclareStringOption{notomath}
+% True means to use the sans-serif font as the default text font.
+\DeclareBoolOption{sfdefault}
+% True means to use the sans-serif font as the default math font.
+\DeclareBoolOption{sfmath}
+
+\PassOptionsToPackage{%
+  newcommands}{ragged2e}
+\PassOptionsToPackage{%
+  sumlimits,
+  intlimits,
+  namelimits,
+  fleqn,
+  reqno}{amsmath}
+\PassOptionsToPackage{%
+  protected,
+  useindex}{splitidx}
+
+\ProcessKeyvalOptions{rsoptions}
 
 %% =====================================
 %% Packages
@@ -58,18 +85,13 @@
 \RequirePackage{verbatim}
 
 % Text alignment.
-\RequirePackage[newcommands]{ragged2e}
+\RequirePackage{ragged2e}
 
 % Lists.
 \RequirePackage{enumitem}
 
 % Mathematics.
-\RequirePackage[%
-  sumlimits,
-  intlimits,
-  namelimits,
-  fleqn,
-  reqno]{amsmath}
+\RequirePackage{amsmath}
 \RequirePackage{siunitx}
 
 % Graphics bundle.
@@ -78,7 +100,7 @@
 \RequirePackage{pdflscape}
 
 % Multiple indices.
-\RequirePackage[protected,useindex]{splitidx}
+\RequirePackage{splitidx}
 
 % The ‘hyperref’ package should be loaded after all other
 % packages.  Use coloured links instead of frames but keep
@@ -89,6 +111,39 @@
     colorlinks=true,
     allcolors=.}
   \NewCommandCopy\urn\nolinkurl}
+
+%% =====================================
+%% Font Setup
+%% =====================================
+
+\ifx\rs@option@font\rs@option@font@notomath
+  % Load Noto Serif and Noto Sans.
+  \RequirePackage[scaled=0.9]{noto-serif}
+  \RequirePackage[scaled=0.9]{noto-sans}
+  % Use Nimbus Mono Narrow as the monospace font.
+  %
+  % The x-height ratio of Noto and Nimbus Mono Narrow is
+  % 5.36*0.9/4.29 = 1.1245.  But this makes the monospace
+  % glyphs too dominant.  Thus, scale Nimbus Mono Narrow
+  % down by the x-height ratio of, e.g. Computer Modern
+  % Typewriter and Computer Modern Sans Serif, i.e.
+  % 4.3045/4.44336 = 0.96875.  Then, the total scale
+  % factor is 1.1245*0.96875 = 1.0893.
+  \RequirePackage[scaled=1.09]{nimbusmononarrow}
+  % Load the Noto math package.
+  \edef\@tempa{subscriptcorrection, vvarbb, \rs@option@notomath}
+  \ifrs@option@sfmath
+    \edef\@tempa{sfdefault, \@tempa}
+  \fi
+  \RequirePackage[\@tempa]{notomath}
+  \ifrs@option@sfdefault
+    \def\familydefault{\sfdefault}
+  \fi
+\else % not notomath
+\ifx\rs@option@font\relax\else
+  \PackageWarningNoLine{rspackages}{%
+    Unknown font package ‘\rs@option@font’.}
+\fi\fi
 
 %% =====================================
 %% General
